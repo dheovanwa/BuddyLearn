@@ -1,4 +1,8 @@
 package com.memasakataudimasak.buddylearn.ui
 
-class HomeScreen {
+import androidx.compose.runtime.Composable
+
+@Composable
+fun HomeScreen() {
+
 }

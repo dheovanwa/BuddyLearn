@@ -39,10 +39,6 @@ import java.util.Locale
 import kotlin.collections.firstOrNull
 import kotlin.text.lowercase
 
-enum class Screen {
-    Home, Settings
-}
-
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainScreen(

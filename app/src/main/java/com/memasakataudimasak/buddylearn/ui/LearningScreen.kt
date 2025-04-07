@@ -1,4 +1,7 @@
 package com.memasakataudimasak.buddylearn.ui
 
-class LearningScreen {
+import androidx.compose.runtime.Composable
+
+@Composable
+fun LearningScreen() {
 }
