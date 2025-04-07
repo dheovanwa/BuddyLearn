@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.memasakataudimasak.buddylearn.data.Screen
 import com.memasakataudimasak.buddylearn.data.TtsManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
