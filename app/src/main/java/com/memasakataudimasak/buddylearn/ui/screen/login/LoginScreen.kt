@@ -1,4 +1,4 @@
-package com.memasakataudimasak.buddylearn.ui
+package com.memasakataudimasak.buddylearn.ui.screen.login
 
 import androidx.compose.runtime.Composable
 
