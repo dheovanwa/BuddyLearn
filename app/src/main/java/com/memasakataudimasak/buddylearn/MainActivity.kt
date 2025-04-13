@@ -11,11 +11,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.memasakataudimasak.buddylearn.ui.theme.BuddyLearnTheme
 
 class MainActivity : ComponentActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MainScreen(this, this)
+            BuddyLearnTheme {
+                MainScreen(this, this)
+            }
         }
     }
 }

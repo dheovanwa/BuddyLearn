@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Buddy Learn</string>
+    <string name="access_accessibility_settings_content_desc">Access Accessibility Settings</string>
+    <string name="home_screen">Home</string>
+    <string name="settings_screen">Settings</string>
+    <string name="accessibility_screen">Accessibility</string>
+    <string name="grade_setting_screen">Grade</string>
+    <string name="back_button">Back to upper page</string>
 </resources>
