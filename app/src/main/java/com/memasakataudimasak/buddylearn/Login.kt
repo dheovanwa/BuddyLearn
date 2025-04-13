@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+//import androidx.compose.material.icons.filled.`Visibility
+//import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -76,18 +76,18 @@ fun Login() {
             trailingIcon = {
                 if (showPassword) {
                     IconButton(onClick = { showPassword = false }) {
-                        Icon(
-                            imageVector = Icons.Filled.Visibility,
-                            contentDescription = "hide_password"
-                        )
+//                        Icon(
+////                            imageVector = Icons.Filled.Visibility,
+//                            contentDescription = "hide_password"
+//                        )
                     }
                 } else {
                     IconButton(
                         onClick = { showPassword = true }) {
-                        Icon(
-                            imageVector = Icons.Filled.VisibilityOff,
-                            contentDescription = "hide_password"
-                        )
+//                        Icon(
+////                            imageVector = Icons.Filled.VisibilityOff,
+//                            contentDescription = "hide_password"
+//                        )
                     }
                 }
             }
