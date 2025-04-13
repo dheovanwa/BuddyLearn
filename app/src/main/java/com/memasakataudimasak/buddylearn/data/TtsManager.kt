@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.util.Locale
@@ -28,6 +29,18 @@ class TtsManager(
         return tts
     }
 
+    fun feedback(msg: String, isEnglish: Boolean) {
+        val locale = if (isEnglish) Locale.ENGLISH else Locale("id", "ID")
+        val result = tts.setLanguage(locale)
+
+        tts.speak(
+            msg,
+            TextToSpeech.QUEUE_FLUSH,
+            null,
+            null
+        )
+    }
+
     fun checkMicPermission() {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
             != android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -40,11 +53,12 @@ class TtsManager(
         }
     }
 
-    fun startVoiceIntent(): Intent {
+    fun startVoiceIntent(isEnglish: Boolean): Intent {
         return Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale("id", "ID"))
-            putExtra(RecognizerIntent.EXTRA_PROMPT, "Silakan beri perintah")
+            val locale = if (isEnglish) Locale.ENGLISH else Locale("id", "ID")
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, "id_ID")
+//            putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, locale.toString())
         }
     }
 
