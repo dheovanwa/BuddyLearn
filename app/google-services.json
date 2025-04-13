@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "982857127264",
+    "project_id": "buddy-learn",
+    "storage_bucket": "buddy-learn.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:982857127264:android:869b96c277b110cf07ba05",
+        "android_client_info": {
+          "package_name": "com.memasakataudimasak.buddylearn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxBkEomA-VTgO9yMUwi2WbLm4y0wPlik8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

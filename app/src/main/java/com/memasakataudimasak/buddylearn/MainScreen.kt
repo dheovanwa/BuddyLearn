@@ -141,6 +141,7 @@ fun MainScreen(
     )
 
     val uiState by viewModel.uiState.collectAsState()
+
     TtsBox(
         tts = ttsManager.returnTts(),
         viewModel = viewModel,
@@ -162,7 +163,7 @@ fun MainScreen(
 
             NavHost(
                 navController = navController,
-                startDestination = Screen.Home.name,
+                startDestination = Screen.Login.name,
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(Screen.Home.name) {
@@ -178,6 +179,12 @@ fun MainScreen(
                             Text("Go to Settings")
                         }
                     }
+                }
+                composable(Screen.Login.name) {
+
+                }
+                composable(Screen.Signup.name) {
+
                 }
                 composable(Screen.Settings.name) {
                     SettingsScreen(
