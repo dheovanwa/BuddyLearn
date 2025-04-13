@@ -8,4 +8,6 @@ enum class Screen(@StringRes val title: Int) {
     Settings(title = R.string.settings_screen),
     Accessibility(title = R.string.accessibility_screen),
     Grade(title = R.string.grade_setting_screen),
+    Login(title = R.string.login),
+    Signup(title = R.string.signup),
 }
