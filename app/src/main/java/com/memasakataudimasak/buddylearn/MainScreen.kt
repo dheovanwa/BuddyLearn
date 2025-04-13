@@ -59,7 +59,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.memasakataudimasak.buddylearn.data.NavigationAssistant
 import com.memasakataudimasak.buddylearn.data.UiState
+import com.memasakataudimasak.buddylearn.ui.screen.login.Login
 import com.memasakataudimasak.buddylearn.ui.screen.settings.SaveChangesDialog
+import com.memasakataudimasak.buddylearn.ui.screen.signup.Register
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun Modifier.speakOnLongPress(
@@ -128,6 +130,7 @@ fun MainScreen(
     context: Context,
     activity: Activity,
     viewModel: ViewModel = viewModel(),
+    authViewModel: AuthViewModel = AuthViewModel()
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -181,10 +184,16 @@ fun MainScreen(
                     }
                 }
                 composable(Screen.Login.name) {
-
+                    Login(
+                        navController = navController,
+                        authViewModel = authViewModel
+                    )
                 }
                 composable(Screen.Signup.name) {
-
+                    Register(
+                        navController = navController,
+                        authViewModel = authViewModel
+                    )
                 }
                 composable(Screen.Settings.name) {
                     SettingsScreen(

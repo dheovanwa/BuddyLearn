@@ -75,7 +75,9 @@ fun Login(navController: NavController, authViewModel: AuthViewModel) {
     }
 
     Column (
-        modifier = Modifier.fillMaxSize().padding(vertical = 160.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = 160.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Enter your account details", fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
@@ -85,13 +87,13 @@ fun Login(navController: NavController, authViewModel: AuthViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        OutlinedTextField(value = "", onValueChange = {}, modifier = Modifier.width(300.dp), label = {
+        OutlinedTextField(value = email, onValueChange = {email = it}, modifier = Modifier.width(300.dp), label = {
             Text(text = "Email")
         })
 
         Spacer(modifier = Modifier.height(43.5.dp))
 
-        OutlinedTextField(value = "", onValueChange = {}, modifier = Modifier.width(300.dp),
+        OutlinedTextField(value = password, onValueChange = { password = it }, modifier = Modifier.width(300.dp),
             visualTransformation = if (showPassword) {
                 VisualTransformation.None
             } else {
@@ -131,7 +133,9 @@ fun Login(navController: NavController, authViewModel: AuthViewModel) {
                 contentColor = Color.Black
             ),
             enabled = authState.value != AuthState.Loading,
-            modifier = Modifier.width(300.dp).height(54.dp),
+            modifier = Modifier
+                .width(300.dp)
+                .height(54.dp),
             shape = RoundedCornerShape(24)
         ) {
             Text("Login", fontSize = 24.sp  )
