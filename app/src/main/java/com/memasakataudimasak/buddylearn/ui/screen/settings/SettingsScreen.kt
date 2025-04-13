@@ -121,8 +121,6 @@ fun LanguageDialog(
     onLanguageSelected: (String) -> Unit,
     viewModel: ViewModel
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-
     if (showDialog) {
         BuddyLearnTheme {
             Dialog(onDismissRequest = { onDismiss() }) {
@@ -288,7 +286,7 @@ fun SettingsScreen(
                         modifier = Modifier.width(16.dp)
                     )
                     Text(
-                        "Language",
+                        "Voice Language",
                         fontFamily = FontFamily(Font(R.font.monda))
                     )
                 }
@@ -297,7 +295,6 @@ fun SettingsScreen(
                     fontFamily = FontFamily(Font(R.font.monda)),
                     modifier = Modifier.padding(bottom = 5.dp),
                 )
-                Log.d("dheovan di ui", "${uiState.isEnglish}")
 
             }
             LanguageDialog(

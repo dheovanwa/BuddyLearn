@@ -6,4 +6,9 @@ data class UiState(
 
     val sliderGradeValue: Float = 1f,
     val showSaveDialog: Boolean = false,
+
+    val userCommand: String = "",
+    val commandProcessed: String = "",
+
+    val onTextToSpeech: Boolean = true,
 )

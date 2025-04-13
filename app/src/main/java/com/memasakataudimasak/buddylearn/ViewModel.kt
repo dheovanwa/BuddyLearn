@@ -55,4 +55,23 @@ class ViewModel: ViewModel() {
         }
     }
 
+    fun setUserCommand(userCommand: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                userCommand = userCommand
+            )
+        }
+    }
+    fun setCommandProcessed(commandProcessed: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                commandProcessed = commandProcessed
+            )
+        }
+    }
+
+    fun getGradeAndLanguage(): Pair<Int, Boolean>  {
+        val state = _uiState.value
+        return Pair(state.grade, state.isEnglish)
+    }
 }
