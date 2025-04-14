@@ -95,8 +95,8 @@ fun CustomSlider(
                 sliderValue = it
                 viewModel.setSliderGradeValue(sliderValue)
             },
-            valueRange = 0f..22f,
-            steps = 12, // 8 steps means 7 in-between steps
+            valueRange = 0f..8f,
+            steps = 7, // 8 steps means 7 in-between steps
             modifier = Modifier.fillMaxWidth(),
             colors = SliderDefaults.colors(
                 activeTrackColor = Color(0xFF66E0C2),
