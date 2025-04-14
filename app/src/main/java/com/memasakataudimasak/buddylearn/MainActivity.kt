@@ -8,6 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.memasakataudimasak.buddylearn.data.TtsManager
+import com.memasakataudimasak.buddylearn.ui.screen.learn.Learn
 import com.memasakataudimasak.buddylearn.ui.theme.BuddyLearnTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,6 +21,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             BuddyLearnTheme {
                 MainScreen(this, this)
+//                val ttsManager = TtsManager(this, this)
+//                Learn(ttsManager = ttsManager)
             }
         }
     }

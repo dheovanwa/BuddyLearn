@@ -10,5 +10,6 @@ enum class Screen(@StringRes val title: Int) {
     Grade(title = R.string.grade_setting_screen),
     Login(title = R.string.login),
     Signup(title = R.string.signup),
-    Landing(title = R.string.landing)
+    Landing(title = R.string.landing),
+    Learn(title = R.string.learn)
 }
