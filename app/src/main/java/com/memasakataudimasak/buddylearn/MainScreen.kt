@@ -67,7 +67,6 @@ import com.memasakataudimasak.buddylearn.data.NavigationAssistant
 import com.memasakataudimasak.buddylearn.data.UiState
 import com.memasakataudimasak.buddylearn.ui.screen.landingpage.LandingPage
 import com.memasakataudimasak.buddylearn.ui.screen.login.Login
-import com.memasakataudimasak.buddylearn.ui.screen.settings.SaveChangesDialog
 import com.memasakataudimasak.buddylearn.ui.screen.signup.Register
 
 @OptIn(ExperimentalComposeUiApi::class)

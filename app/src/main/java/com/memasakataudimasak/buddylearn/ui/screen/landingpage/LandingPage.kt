@@ -2,6 +2,7 @@ package com.memasakataudimasak.buddylearn.ui.screen.landingpage
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -54,7 +55,7 @@ fun LandingPage(authViewModel: AuthViewModel, navController: NavController) {
         horizontalArrangement = Arrangement.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.landing_title),
+            painter = if(isSystemInDarkTheme()) painterResource(id = R.drawable.landing_title_dark) else painterResource(id = R.drawable.landing_title_light),
             contentDescription = "Landing Title",
             modifier = Modifier.height(62.dp).width(209.dp)
         )
@@ -66,7 +67,7 @@ fun LandingPage(authViewModel: AuthViewModel, navController: NavController) {
         verticalArrangement = Arrangement.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.landing_text),
+            painter = if(isSystemInDarkTheme()) painterResource(id = R.drawable.landing_text_dark) else painterResource(id = R.drawable.landing_text_light),
             contentDescription = "Landing Title",
             modifier = Modifier.height(168.dp).width(374.dp)
         )
