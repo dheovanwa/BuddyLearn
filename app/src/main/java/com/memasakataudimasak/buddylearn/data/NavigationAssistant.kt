@@ -127,7 +127,7 @@ object NavigationAssistant {
                         .get("content")
                         .asString
                     result = content
-                    Log.d("voice command", result)
+                    Log.d("voice command di navigationassitant", result)
                     viewModel.setCommandProcessed(result)
                 } else {
                     result = ""

@@ -42,6 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.memasakataudimasak.buddylearn.AuthState
+import com.memasakataudimasak.buddylearn.AuthViewModel
 import com.memasakataudimasak.buddylearn.R
 import com.memasakataudimasak.buddylearn.ViewModel
 import com.memasakataudimasak.buddylearn.ui.theme.BuddyLearnTheme
@@ -201,6 +203,7 @@ fun SettingsScreen(
     onGradeSettingClicked: () -> Unit = {},
     onLanguageSettingClicked: () -> Unit = {},
     onNavigateBack: () -> Unit = {},
+    onSignOut: () -> Unit = {},
     viewModel: ViewModel,
 ) {
     var selectedLanguage by remember { mutableStateOf("English") }
@@ -310,7 +313,7 @@ fun SettingsScreen(
                 .fillMaxWidth()
         ) {
             Button(
-                onClick = {},
+                onClick = onSignOut,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(15.dp)
@@ -356,6 +359,6 @@ fun SettingsScreen(
 fun SettingsScreenPreview() {
     SettingsScreen(
         grade = 1,
-        viewModel = ViewModel()
+        viewModel = ViewModel(),
     )
 }

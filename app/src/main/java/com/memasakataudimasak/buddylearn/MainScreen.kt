@@ -186,6 +186,9 @@ fun MainContent(
                 isEnglish = uiState.isEnglish,
                 onGradeSettingClicked = { navController.navigate((Screen.Grade.name)) },
                 onNavigateBack = {navController.popBackStack()},
+                onSignOut = {
+                    authViewModel.signout()
+                },
                 viewModel = viewModel
             )
         }
@@ -221,7 +224,7 @@ fun MainContent(
             "back" -> navController.navigateUp()
         }
 
-//                Log.d("voice command in main", "${uiState.commandProcessed}")
+                Log.d("voice command ini main", "${uiState.commandProcessed}")
     }
 }
 
@@ -236,7 +239,7 @@ fun MainScreen(
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = Screen.valueOf(
-        backStackEntry?.destination?.route ?: Screen.Landing.name
+        backStackEntry?.destination?.route ?: Screen.Home.name
     )
 
     val ttsManager = TtsManager(
@@ -362,6 +365,7 @@ fun TtsBox(
                 ?.firstOrNull()
                 ?.lowercase(Locale.ROOT)
             viewModel.setUserCommand(spokenText ?: "")
+            Log.d("voice command ini main", "${spokenText}")
             navigationAssistant.navigateBySpeech(
                 viewModel = viewModel,
                 currentScreen = currentScreen,
