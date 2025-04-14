@@ -42,7 +42,17 @@ class AccessibilityViewModel: ViewModel() {
                 theme = theme
             )
         }
-        Log.d("theme main di viewmodel", uiState.value.theme)
+//        Log.d("theme main di viewmodel", uiState.value.theme)
+
+    }
+
+    fun setFontFamily(fontFamily: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                fontFamily = fontFamily
+            )
+        }
+//        Log.d("theme main di viewmodel", uiState.value.theme)
 
     }
 

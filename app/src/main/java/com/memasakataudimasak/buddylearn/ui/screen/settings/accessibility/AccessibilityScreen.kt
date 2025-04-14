@@ -2,6 +2,7 @@ package com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility
 
 import android.app.Activity
 import android.util.Log
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -32,6 +33,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -208,14 +210,13 @@ fun AccessibilityScreen(
     fun saveSelectedTheme(theme: String) {
         selectedTheme = theme
         sharedPreferences.edit().putString("selected_theme", theme).apply()
-        Log.d("theme main setting", theme)
-
         viewModel.setTheme(selectedTheme)
     }
 
     fun saveSelectedFont(font: String) {
         selectedFontFamily = font
         sharedPreferences.edit().putString("selected_font", font).apply()
+        viewModel.setFontFamily(font)
     }
 
     fun saveSelectedLayout(layout: String) {
@@ -465,7 +466,7 @@ fun AccessibilityScreen(
         ) {
             Text(
                 "Speech Recognition",
-                color = MaterialTheme.colorScheme.onBackground,
+//                color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 16.sp
 //                fontFamily = FontFamily(R.font.monda),
             )
@@ -567,8 +568,8 @@ fun AccessibilityScreen(
                 }
 
                 Button(
-                    onClick = { saveSelectedFont("dyslexic") },
-                    modifier = selectedButtonFont("dyslexic")
+                    onClick = { saveSelectedFont("opendyslexic") },
+                    modifier = selectedButtonFont("opendyslexic")
                         .height(60.dp)
                         .width(100.dp),
                     colors = ButtonDefaults.buttonColors(
@@ -580,8 +581,9 @@ fun AccessibilityScreen(
                     Text(
                         "Open Dyslexic",
                         color = Color(0xFF363636),
+                        fontFamily = FontFamily(Font(R.font.open_dyslexic)),
                         textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
+                        fontSize = 11.sp,
 //                                fontFamily = FontFamily(Font(R.font.open_dyslexic)))
                     )
                 }

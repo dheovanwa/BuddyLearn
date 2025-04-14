@@ -3,7 +3,7 @@ package com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility
 data class AccessibilityUiState(
     val fontWeight: Int = 1,
     val fontSize: Int = 16,
-    val fontFamily: String = "serif",
+    val fontFamily: String = "sans",
     val layout: String = "compact",
     val theme: String = "light",
     val isSpeechRecognitionOn: Boolean = true,

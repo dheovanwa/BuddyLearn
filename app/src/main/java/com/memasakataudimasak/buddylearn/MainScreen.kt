@@ -66,6 +66,7 @@ import com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility.Access
 import com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility.AccessibilityViewModel
 import com.memasakataudimasak.buddylearn.ui.screen.signup.Register
 import com.memasakataudimasak.buddylearn.ui.theme.BuddyLearnTheme
+import com.memasakataudimasak.buddylearn.ui.theme.getTypography
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun Modifier.speakOnLongPress(
@@ -152,13 +153,17 @@ fun MainScreen(
 
     val sharedPreferences = LocalContext.current.getSharedPreferences("app_prefs", Activity.MODE_PRIVATE)
     val savedTheme = sharedPreferences.getString("selected_theme", "light") ?: "light"
+    val savedFontFamily = sharedPreferences.getString("selected_font_family", "sans") ?: "sans"
 
     val accessibilityUiState by accessibilityViewModel.uiState.collectAsState()
     var theme = savedTheme
+    var fontFamily = savedFontFamily
 
-    LaunchedEffect(accessibilityUiState.theme) {
+
+    LaunchedEffect(accessibilityUiState) {
         theme = accessibilityUiState.theme
-        Log.d("theme main", accessibilityUiState.theme)
+        fontFamily = accessibilityUiState.fontFamily
+        Log.d("font family", fontFamily)
     }
 
 
