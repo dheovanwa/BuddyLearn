@@ -81,10 +81,8 @@ fun Learn(
 
                     Spacer(modifier = Modifier.height(6.dp))
 
-                    Log.d("learn content", currentItem.toString())
-
                     if (currentItem?.questionFlag == false) {
-                        currentItem?.value?.forEach { text ->
+                        currentItem.value.forEach { text ->
                             Text(
                                 text,
                                 modifier = Modifier
@@ -93,6 +91,7 @@ fun Learn(
                             Spacer(modifier = Modifier.height(20.dp))
                         }
                     } else {
+                        Spacer(modifier = Modifier.height(20.dp))
                         Text(
                             text = currentItem?.sectionTitle.toString()
                         )
@@ -100,16 +99,18 @@ fun Learn(
                         var selectedIndex by remember { mutableStateOf<Int?>(null) }
                         val correctAnswerIndex = currentItem?.answer ?: 0
 
+                        Spacer(modifier = Modifier.height(20.dp))
+
                         currentItem?.value?.forEachIndexed { index, option ->
                             val isSelected = selectedIndex == index
                             val isCorrect = index == correctAnswerIndex
                             val isAnswered = selectedIndex != null
 
                             val backgroundColor = when {
-                                !isAnswered -> Color(0x03B7B7B7)
+                                !isAnswered -> Color(0xFFFFFFFF)
                                 isSelected && isCorrect -> Color(0xFF4CAF50)
                                 isSelected && !isCorrect -> Color(0xFFF44336)
-                                else -> Color(0x03B7B7B7)
+                                else -> Color(0xFFFFFFFF)
                             }
 
                             Button(
@@ -119,11 +120,11 @@ fun Learn(
                                     }
                                 },
                                 modifier = Modifier
-                                    .shadow(elevation = 2.dp, shape = RoundedCornerShape(32.dp))
+                                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(12.dp))
                                     .width(372.dp)
                                     .height(90.dp)
                                     .speakOnLongPress(tts = ttsManager.returnTts(), ttsEnabled = globalUiState.onTextToSpeech, text = option),
-                                shape = RoundedCornerShape(32),
+                                shape = RoundedCornerShape(0.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = backgroundColor,
                                     contentColor = Color.Black
@@ -162,12 +163,12 @@ fun Learn(
                 ),
                 enabled = currentIndex > 0) {
                 Image(
-                    painter = painterResource(id = R.drawable.back_button),
+                    painter = painterResource(id = R.drawable.baseline_arrow_back_24),
                     contentDescription = "Back button",
                     modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "Previous Question")
+                Text(text = "Previous")
             }
 
             Button(
@@ -179,10 +180,10 @@ fun Learn(
                     contentColor = Color.Black
                 ),
                 enabled = currentIndex < learnList.size - 1) {
-                Text(text = "Next Question")
+                Text(text = "Next")
                 Spacer(modifier = Modifier.width(8.dp))
                 Image(
-                    painter = painterResource(id = R.drawable.next_button),
+                    painter = painterResource(id = R.drawable.baseline_arrow_forward_24),
                     contentDescription = "Next button",
                     modifier = Modifier.size(24.dp)
                 )

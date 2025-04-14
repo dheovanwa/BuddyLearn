@@ -1,7 +1,7 @@
 package com.memasakataudimasak.buddylearn.data
 
 data class UiState(
-    val grade: Int = 1,
+    val grade: Int = 7,
     val isEnglish: Boolean = true,
 
     val sliderGradeValue: Float = 1f,

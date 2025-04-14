@@ -35,8 +35,9 @@ object NavigationAssistant {
             change-language (settings-screen) [isEnglish = true / false]
             view-stats (profile-screen)
             view-completed-module (profile-screen)
-            continue
-            back
+            next-learn (learn-screen)
+            previous-learn (learn-screen)
+            back (ini back button)
             chatbot ([mapel]-[kelas]-bab-[bab_berapa]-subbab-[subbab_berapa]-screen) [jangan dialihkan ke sini jika berada pada screen lain]
             ? [jika perintah yang dikirim user tidak dapat diklasifikasi]
                 

@@ -21,8 +21,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             BuddyLearnTheme {
                 MainScreen(this, this)
-//                val ttsManager = TtsManager(this, this)
-//                Learn(ttsManager = ttsManager)
             }
         }
     }

@@ -67,6 +67,8 @@ import com.memasakataudimasak.buddylearn.data.NavigationAssistant
 import com.memasakataudimasak.buddylearn.data.UiState
 import com.memasakataudimasak.buddylearn.ui.screen.landingpage.LandingPage
 import com.memasakataudimasak.buddylearn.ui.screen.learn.Learn
+import com.memasakataudimasak.buddylearn.ui.screen.learn.LearnUiState
+import com.memasakataudimasak.buddylearn.ui.screen.learn.LearnViewModel
 import com.memasakataudimasak.buddylearn.ui.screen.login.Login
 import com.memasakataudimasak.buddylearn.ui.screen.signup.Register
 
@@ -140,6 +142,8 @@ fun MainContent(
     currentScreen: Screen,
     startScreen: Screen,
     uiState: UiState,
+    learnViewModel: LearnViewModel = viewModel(),
+    learnUiState: LearnUiState,
     innerPadding: PaddingValues
 ) {
 
@@ -161,6 +165,16 @@ fun MainContent(
                 ) {
                     Text("Go to Settings")
                 }
+                Button(onClick = {
+                    navController.navigate(Screen.Learn.name)
+                },
+                    modifier = Modifier
+                        .speakOnLongPress(tts = ttsManager.returnTts(), ttsEnabled = uiState.onTextToSpeech, text = "Ini adalah tombol menuju pembelajaran")
+                ) {
+                    Text("Go to Learn")
+                }
+
+
             }
         }
         composable(Screen.Login.name) {
@@ -183,6 +197,7 @@ fun MainContent(
         }
         composable(Screen.Learn.name) {
             Learn(
+                learnViewModel = learnViewModel,
                 ttsManager = ttsManager
             )
         }
@@ -227,7 +242,21 @@ fun MainContent(
                 viewModel.setGrade(commands[1].toInt())
                 ttsManager.feedback(if (isEnglish) "Changed grade to ${commands[1]}" else "Mengubah kelas menjadi kelas ${commands[1]}", isEnglish)
             }
-            "back" -> navController.navigateUp()
+            "go-to-sejarah-indonesia-7-screen" -> {
+                navController.navigate(Screen.Learn.name)
+                ttsManager.feedback(if (isEnglish) "To Indonesia History 7th grade" else "Menuju sejarah indonesia kelas 7", isEnglish)
+            }
+            "next-learn" -> {
+                learnViewModel.setCurrentIndex(learnUiState.currentIndex+1)
+            }
+            "previous-learn" -> {
+                learnViewModel.setCurrentIndex(learnUiState.currentIndex-1)
+            }
+            "back" -> {
+                try {
+                    navController.navigateUp()
+                } catch (e: Exception) {}
+            }
         }
 
                 Log.d("voice command ini main", "${uiState.commandProcessed}")
@@ -240,7 +269,8 @@ fun MainScreen(
     context: Context,
     activity: Activity,
     viewModel: ViewModel = viewModel(),
-    authViewModel: AuthViewModel = AuthViewModel()
+    authViewModel: AuthViewModel = viewModel(),
+    learnViewModel: LearnViewModel = viewModel(),
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -254,6 +284,7 @@ fun MainScreen(
     )
 
     val uiState by viewModel.uiState.collectAsState()
+    val learnUiState by learnViewModel.uiState.collectAsState()
     val authState = authViewModel.authState.observeAsState()
 
     var startScreen by remember { mutableStateOf<Screen>(Screen.Home) }
@@ -267,6 +298,7 @@ fun MainScreen(
     }
 
 
+    Log.d("voice command screen sekarang", currentScreen.name)
     when (currentScreen) {
         Screen.Landing -> {
             Scaffold(
@@ -281,6 +313,8 @@ fun MainScreen(
                     uiState = uiState,
                     innerPadding = innerPadding,
                     startScreen = startScreen,
+                    learnUiState = learnUiState,
+                    learnViewModel = learnViewModel
                 )
             }
         }
@@ -305,6 +339,8 @@ fun MainScreen(
                     uiState = uiState,
                     startScreen = startScreen,
                     innerPadding = innerPadding,
+                    learnUiState = learnUiState,
+                    learnViewModel = learnViewModel
                 )
             }
         }
@@ -336,6 +372,8 @@ fun MainScreen(
                         uiState = uiState,
                         startScreen = startScreen,
                         innerPadding = innerPadding,
+                        learnUiState = learnUiState,
+                        learnViewModel = learnViewModel
                     )
                 }
 

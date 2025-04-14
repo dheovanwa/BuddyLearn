@@ -48,4 +48,5 @@ class LearnViewModel : ViewModel() {
     fun setCurrentIndex(index: Int) {
         _uiState.value = _uiState.value.copy(currentIndex = index)
     }
+
 }
