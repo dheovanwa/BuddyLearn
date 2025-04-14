@@ -142,7 +142,7 @@ fun CustomSliderWeight(
                 sliderValue = it
                 viewModel.setSliderGradeValue(sliderValue)
             },
-            valueRange = 0f..8f,
+            valueRange = 0f..4f,
             steps = 7, // 8 steps means 7 in-between steps
             modifier = Modifier.fillMaxWidth(),
             colors = SliderDefaults.colors(
@@ -301,17 +301,17 @@ fun AccessibilityScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Button(
-                                onClick = { saveSelectedTheme("cold") },
-                                modifier = selectedButtonTheme("cold").height(120.dp).width(150.dp),
+                                onClick = { saveSelectedTheme("dark") },
+                                modifier = selectedButtonTheme("dark").height(120.dp).width(150.dp),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFFE8EDFC),
+                                    containerColor = Color(0xFF363636),
                                     contentColor = Color(0xFF363636)
                                 ),
                                 shape = RoundedCornerShape(14.dp)
                             ) {
                                 Text(
-                                    "Hello from the Cold!",
-                                    color = Color(0xFF363636),
+                                    "Hello from the Dark",
+                                    color = Color(0xFFFBFBFB),
                                     textAlign = TextAlign.Center
                                 )
                             }
@@ -349,7 +349,7 @@ fun AccessibilityScreen(
                                 shape = RoundedCornerShape(14.dp)
                             ) {
                                 Text(
-                                    "Hello from the Warmth!",
+                                    "Hello from the Sun!",
                                     color = Color(0xFF363636),
                                     textAlign = TextAlign.Center
                                 )
@@ -376,17 +376,17 @@ fun AccessibilityScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Button(
-                                onClick = { saveSelectedTheme("dark") },
-                                modifier = selectedButtonTheme("dark").height(120.dp).width(150.dp),
+                                onClick = { saveSelectedTheme("cold") },
+                                modifier = selectedButtonTheme("cold").height(120.dp).width(150.dp),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFF363636),
+                                    containerColor = Color(0xFFE8EDFC),
                                     contentColor = Color(0xFF363636)
                                 ),
                                 shape = RoundedCornerShape(14.dp)
                             ) {
                                 Text(
-                                    "Hello from the Dark!",
-                                    color = Color(0xFFFBFBFE),
+                                    "Hello from the Cold!",
+                                    color = Color(0xFF363636),
                                     textAlign = TextAlign.Center
                                 )
                             }
