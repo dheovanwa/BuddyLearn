@@ -59,6 +59,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.memasakataudimasak.buddylearn.data.NavigationAssistant
 import com.memasakataudimasak.buddylearn.data.UiState
+import com.memasakataudimasak.buddylearn.ui.screen.landingpage.LandingPage
 import com.memasakataudimasak.buddylearn.ui.screen.login.Login
 import com.memasakataudimasak.buddylearn.ui.screen.settings.SaveChangesDialog
 import com.memasakataudimasak.buddylearn.ui.screen.signup.Register
@@ -166,7 +167,7 @@ fun MainScreen(
 
             NavHost(
                 navController = navController,
-                startDestination = Screen.Login.name,
+                startDestination = Screen.Landing.name,
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(Screen.Home.name) {
@@ -193,6 +194,11 @@ fun MainScreen(
                     Register(
                         navController = navController,
                         authViewModel = authViewModel
+                    )
+                }
+                composable(Screen.Landing.name) {
+                    LandingPage(
+                        navController = navController
                     )
                 }
                 composable(Screen.Settings.name) {

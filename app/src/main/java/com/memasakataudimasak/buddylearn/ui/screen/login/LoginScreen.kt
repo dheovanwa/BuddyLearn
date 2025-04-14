@@ -5,10 +5,10 @@ import com.memasakataudimasak.buddylearn.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,22 +28,20 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Red
+import androidx.compose.ui.graphics.Color.Companion.Unspecified
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.memasakataudimasak.buddylearn.AuthState
 import com.memasakataudimasak.buddylearn.AuthViewModel
 import com.memasakataudimasak.buddylearn.data.Screen
-import com.memasakataudimasak.buddylearn.ui.theme.BuddyLearnTheme
-import okhttp3.internal.notifyAll
 
 
 @Composable
@@ -51,49 +49,57 @@ fun Login(navController: NavController, authViewModel: AuthViewModel) {
     var showPassword by remember { mutableStateOf(value = false) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var emailError by remember { mutableStateOf("") }
+    var passwordError by remember { mutableStateOf("") }
 
     val authState = authViewModel.authState.observeAsState()
     val context = LocalContext.current
 
     LaunchedEffect(authState.value) {
         when(authState.value) {
-            is AuthState.Authenticated -> navController.navigate(Screen.Home.name)
+            is AuthState.Authenticated -> navController.navigate(Screen.Home.name) {
+                popUpTo(Screen.Login.name) { inclusive = true }
+            }
             is AuthState.Error -> Toast.makeText(context,
                 (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT).show()
             else -> Unit
         }
     }
 
-    Button(onClick = {},
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent,
-            contentColor = Color.Unspecified)) {
-        Image(
-            painter = painterResource(id = R.drawable.back_button),
-            contentDescription = "Back button",
-            modifier = Modifier.size(16.dp))
+    Row {
+        Button(onClick = {},
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = Color.Unspecified)) {
+            Image(
+                painter = painterResource(id = R.drawable.back_button),
+                contentDescription = "Back button",
+                modifier = Modifier.size(16.dp))
+        }
     }
 
-    Column (
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(vertical = 160.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Enter your account details", fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
-    }
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        OutlinedTextField(value = email, onValueChange = {email = it}, modifier = Modifier.width(300.dp), label = {
-            Text(text = "Email")
-        })
+        Text("Enter your account details", fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
+
+        Spacer(modifier = Modifier.height(101.5.dp))
+
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            modifier = Modifier.width(300.dp),
+            label = { Text(emailError.ifEmpty { "Email" }, color = if(emailError.isNotEmpty()) Red else Unspecified) },
+        )
 
         Spacer(modifier = Modifier.height(43.5.dp))
 
-        OutlinedTextField(value = password, onValueChange = { password = it }, modifier = Modifier.width(300.dp),
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            modifier = Modifier.width(300.dp),
             visualTransformation = if (showPassword) {
                 VisualTransformation.None
             } else {
@@ -118,15 +124,18 @@ fun Login(navController: NavController, authViewModel: AuthViewModel) {
                     }
                 }
             },
-            label = {
-                Text(text = "Password")
-            })
+            label = { Text(passwordError.ifEmpty { "Password" }, color = if(passwordError.isNotEmpty()) Red else Unspecified) },
+        )
 
         Spacer(modifier = Modifier.height(39.dp))
 
         Button(
             onClick = {
-                authViewModel.login(email, password)
+                emailError = if(email.isBlank()) "Email is required!" else ""
+                passwordError = if(password.isBlank()) "Password is required!" else ""
+                if(emailError.isEmpty() && passwordError.isEmpty()) {
+                    authViewModel.login(email, password)
+                }
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFADF9B2),
