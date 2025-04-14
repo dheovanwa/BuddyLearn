@@ -71,7 +71,6 @@ import com.memasakataudimasak.buddylearn.ui.screen.learn.Learn
 import com.memasakataudimasak.buddylearn.ui.screen.learn.LearnUiState
 import com.memasakataudimasak.buddylearn.ui.screen.learn.LearnViewModel
 import com.memasakataudimasak.buddylearn.ui.screen.login.Login
-import com.memasakataudimasak.buddylearn.ui.screen.settings.SaveChangesDialog
 import com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility.AccessibilityScreen
 import com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility.AccessibilityViewModel
 import com.memasakataudimasak.buddylearn.ui.screen.signup.Register
@@ -140,14 +139,15 @@ fun MainScreenBar(
 
 @Composable
 fun MainContent(
-    viewModel: ViewModel = viewModel(),
+    viewModel: ViewModel,
     authViewModel: AuthViewModel = AuthViewModel(),
     navController: NavHostController,
     ttsManager: TtsManager,
     currentScreen: Screen,
     startScreen: Screen,
     uiState: UiState,
-    learnViewModel: LearnViewModel = viewModel(),
+    learnViewModel: LearnViewModel,
+    accessibilityViewModel: AccessibilityViewModel,
     learnUiState: LearnUiState,
     innerPadding: PaddingValues
 ) {
@@ -155,7 +155,6 @@ fun MainContent(
     NavHost(
         navController = navController,
         startDestination = startScreen.name,
-//        startDestination = Screen.Landing.name,
         modifier = Modifier.padding(innerPadding)
     ) {
         composable(Screen.Home.name) {
@@ -206,12 +205,18 @@ fun MainContent(
                 ttsManager = ttsManager
             )
         }
+        composable(Screen.Accessibility.name) {
+            AccessibilityScreen(
+                viewModel = accessibilityViewModel,
+            )
+        }
         composable(Screen.Settings.name) {
             SettingsScreen(
                 grade = uiState.grade,
                 isEnglish = uiState.isEnglish,
                 onGradeSettingClicked = { navController.navigate((Screen.Grade.name)) },
                 onNavigateBack = {navController.popBackStack()},
+                onAccessibilitySettingsClicked = { navController.navigate(Screen.Accessibility.name) },
                 onSignOut = {
                     authViewModel.signout()
                 },
@@ -251,6 +256,11 @@ fun MainContent(
                 navController.navigate(Screen.Learn.name)
                 ttsManager.feedback(if (isEnglish) "To Indonesia History 7th grade" else "Menuju sejarah indonesia kelas 7", isEnglish)
             }
+            "go-to-accessibility-screen" -> {
+                navController.navigate(Screen.Accessibility.name)
+                ttsManager.feedback(if (isEnglish) "To Accessibility Settings" else "Menuju pengaturan aksesibilitas", isEnglish)
+
+            }
             "next-learn" -> {
                 learnViewModel.setCurrentIndex(learnUiState.currentIndex+1)
             }
@@ -275,7 +285,7 @@ fun MainScreen(
     activity: Activity,
     viewModel: ViewModel = viewModel(),
     accessibilityViewModel: AccessibilityViewModel = viewModel(),
-    authViewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel = viewModel(),
     learnViewModel: LearnViewModel = viewModel(),
 ) {
     val navController = rememberNavController()
@@ -305,14 +315,6 @@ fun MainScreen(
     }
 
 
-    BuddyLearnTheme(selectedTheme = theme, dynamicColor = false) {
-        TtsBox(
-            tts = ttsManager.returnTts(),
-            viewModel = viewModel,
-            currentScreen = currentScreen,
-            startVoiceIntent = { ttsManager.startVoiceIntent(uiState.isEnglish) },
-            modifier = Modifier.fillMaxSize(),
-        ) {
     var startScreen by remember { mutableStateOf<Screen>(Screen.Home) }
     LaunchedEffect(authState.value) {
         when(authState.value) {
@@ -327,57 +329,28 @@ fun MainScreen(
     Log.d("voice command screen sekarang", currentScreen.name)
     when (currentScreen) {
         Screen.Landing -> {
-            Scaffold(
-                modifier = Modifier.fillMaxSize()
-            ) { innerPadding ->
-                MainContent(
-                    viewModel = viewModel,
-                    authViewModel = authViewModel,
-                    navController = navController,
-                    ttsManager = ttsManager,
-                    currentScreen = currentScreen,
-                    uiState = uiState,
-                    innerPadding = innerPadding,
-                    startScreen = startScreen,
-                    learnUiState = learnUiState,
-                    learnViewModel = learnViewModel
-                )
+            BuddyLearnTheme(selectedTheme = theme, dynamicColor = false) {
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
+                    MainContent(
+                        viewModel = viewModel,
+                        authViewModel = authViewModel,
+                        navController = navController,
+                        ttsManager = ttsManager,
+                        currentScreen = currentScreen,
+                        uiState = uiState,
+                        innerPadding = innerPadding,
+                        startScreen = startScreen,
+                        learnUiState = learnUiState,
+                        learnViewModel = learnViewModel,
+                        accessibilityViewModel = accessibilityViewModel,
+                    )
+                }
             }
         }
         Screen.Login, Screen.Signup -> {
-            Scaffold(
-                topBar = {
-                    MainScreenBar(
-                        currentScreen = currentScreen,
-                        canNavigateBack = navController.previousBackStackEntry != null,
-                        navigateUp = { navController.navigateUp() },
-                        navController = navController,
-                    )
-                },
-                modifier = Modifier.fillMaxSize()
-            ) { innerPadding ->
-                MainContent(
-                    viewModel = viewModel,
-                    authViewModel = authViewModel,
-                    navController = navController,
-                    ttsManager = ttsManager,
-                    currentScreen = currentScreen,
-                    uiState = uiState,
-                    startScreen = startScreen,
-                    innerPadding = innerPadding,
-                    learnUiState = learnUiState,
-                    learnViewModel = learnViewModel
-                )
-            }
-        }
-        else -> {
-            TtsBox(
-                tts = ttsManager.returnTts(),
-                viewModel = viewModel,
-                currentScreen = currentScreen,
-                startVoiceIntent = { ttsManager.startVoiceIntent(uiState.isEnglish) },
-                modifier = Modifier.fillMaxSize(),
-            ) {
+            BuddyLearnTheme(selectedTheme = theme, dynamicColor = false) {
                 Scaffold(
                     topBar = {
                         MainScreenBar(
@@ -399,11 +372,54 @@ fun MainScreen(
                         startScreen = startScreen,
                         innerPadding = innerPadding,
                         learnUiState = learnUiState,
-                        learnViewModel = learnViewModel
+                        learnViewModel = learnViewModel,
+                        accessibilityViewModel = accessibilityViewModel,
                     )
                 }
 
             }
+
+        }
+        else -> {
+            BuddyLearnTheme(selectedTheme = theme, dynamicColor = false) {
+                TtsBox(
+                    tts = ttsManager.returnTts(),
+                    viewModel = viewModel,
+                    currentScreen = currentScreen,
+                    startVoiceIntent = { ttsManager.startVoiceIntent(uiState.isEnglish) },
+                    modifier = Modifier.fillMaxSize(),
+                    accessibilityViewModel = accessibilityViewModel,
+                ) {
+                    Scaffold(
+                        topBar = {
+                            MainScreenBar(
+                                currentScreen = currentScreen,
+                                canNavigateBack = navController.previousBackStackEntry != null,
+                                navigateUp = { navController.navigateUp() },
+                                navController = navController,
+                            )
+                        },
+                        modifier = Modifier.fillMaxSize()
+                    ) { innerPadding ->
+                        MainContent(
+                            viewModel = viewModel,
+                            authViewModel = authViewModel,
+                            navController = navController,
+                            ttsManager = ttsManager,
+                            currentScreen = currentScreen,
+                            uiState = uiState,
+                            startScreen = startScreen,
+                            innerPadding = innerPadding,
+                            learnUiState = learnUiState,
+                            learnViewModel = learnViewModel,
+                            accessibilityViewModel = accessibilityViewModel,
+                        )
+                    }
+
+                }
+
+            }
+
         }
     }
 
@@ -419,44 +435,55 @@ fun TtsBox(
     currentScreen: Screen,
     startVoiceIntent: () -> Intent,
     modifier: Modifier = Modifier,
+    accessibilityViewModel: AccessibilityViewModel,
     content: @Composable () -> Unit,
 ) {
-    val hasLaunched = remember { mutableStateOf(false) }
-    val navigationAssistant = NavigationAssistant
+    val accessibilityUiState by accessibilityViewModel.uiState.collectAsState()
 
-    val voiceLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        hasLaunched.value = false // Reset di sini setelah selesai bicara
+    if (accessibilityUiState.isSpeechRecognitionOn) {
+        val hasLaunched = remember { mutableStateOf(false) }
+        val navigationAssistant = NavigationAssistant
 
-        if (result.resultCode == RESULT_OK) {
-            val spokenText = result.data
-                ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                ?.firstOrNull()
-                ?.lowercase(Locale.ROOT)
-            viewModel.setUserCommand(spokenText ?: "")
-            Log.d("voice command ini main", "${spokenText}")
-            navigationAssistant.navigateBySpeech(
-                viewModel = viewModel,
-                currentScreen = currentScreen,
-                stringBody = spokenText ?: "",
-            )
-        }
-    }
+        val voiceLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            hasLaunched.value = false // Reset di sini setelah selesai bicara
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onLongPress = {
-                        tts.speak("", TextToSpeech.QUEUE_FLUSH, null, null)
-                        voiceLauncher.launch(startVoiceIntent())
-                    }
+            if (result.resultCode == RESULT_OK) {
+                val spokenText = result.data
+                    ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                    ?.firstOrNull()
+                    ?.lowercase(Locale.ROOT)
+                viewModel.setUserCommand(spokenText ?: "")
+                Log.d("voice command ini main", "${spokenText}")
+                navigationAssistant.navigateBySpeech(
+                    viewModel = viewModel,
+                    currentScreen = currentScreen,
+                    stringBody = spokenText ?: "",
                 )
             }
-    ) {
-        content()
+        }
+
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onLongPress = {
+                            tts.speak("", TextToSpeech.QUEUE_FLUSH, null, null)
+                            voiceLauncher.launch(startVoiceIntent())
+                        }
+                    )
+                }
+        ) {
+            content()
+        }
+    } else {
+        Box(
+            modifier = modifier
+        ) {
+            content()
+        }
     }
 
 

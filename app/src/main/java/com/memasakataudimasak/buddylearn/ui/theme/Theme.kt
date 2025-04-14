@@ -100,6 +100,7 @@ fun BuddyLearnTheme(
     selectedTheme: String? = null,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
+
     content: @Composable () -> Unit
 ) {
     val isSysteminDarkMode = isSystemInDarkTheme()
@@ -122,13 +123,6 @@ fun BuddyLearnTheme(
             LightThemeColors
         }
     }
-
-//    val finalColorScheme = if (dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-//        val context = LocalContext.current
-//        if (isSysteminDarkMode) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-//    } else {
-//        colorScheme
-//    }
 
     MaterialTheme(
         colorScheme = colorScheme,

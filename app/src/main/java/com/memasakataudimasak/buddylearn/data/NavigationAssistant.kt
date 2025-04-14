@@ -25,6 +25,7 @@ object NavigationAssistant {
             go-to-profile-screen
             go-to-leaderboard-screen
             go-to-settings-screen
+            go-to-accessibility-screen
             go-to-[mapel]-[kelas]-information-screen
             go-to-[mapel]-[kelas]-screen
             go-to-[mapel]-[kelas]-bab-[bab_berapa]-screen
@@ -51,6 +52,7 @@ object NavigationAssistant {
             settings-screen
             about-mapel-screen
             learning-screen
+            accessibility-screen
             
             List mata pelajaran:
             $listOfMapel
@@ -91,7 +93,7 @@ object NavigationAssistant {
         val mediaType = "application/json".toMediaType()
         val jsonBody = Gson().toJson(
             mapOf(
-                "model" to "nvidia/llama-3.1-nemotron-70b-instruct:free",
+                "model" to "qwen/qwen2.5-vl-72b-instruct:free",
                 "messages" to listOf(
                     mapOf(
                         "role" to "user",
@@ -106,7 +108,7 @@ object NavigationAssistant {
         val request = Request.Builder()
             .url("https://openrouter.ai/api/v1/chat/completions")
             .post(requestBody)
-            .addHeader("Authorization", "Bearer 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")
+            .addHeader("Authorization", "Bearer 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")
             .addHeader("Content-Type", "application/json")
             .build()
 
@@ -118,21 +120,24 @@ object NavigationAssistant {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                if (response.isSuccessful) {
-                    val responseBody = response.body?.string()
+                val responseBody = response.body?.string()
+                try {
                     val jsonObject = JsonParser.parseString(responseBody).asJsonObject
-                    val content = jsonObject
-                        .getAsJsonArray("choices")[0]
-                        .asJsonObject
-                        .getAsJsonObject("message")
-                        .get("content")
-                        .asString
-                    result = content
-                    Log.d("voice command di navigationassitant", result)
-                    viewModel.setCommandProcessed(result)
-                } else {
-                    result = ""
 
+                    val choices = jsonObject.getAsJsonArray("choices")
+                    if (choices != null && choices.size() > 0) {
+                        val content = choices[0]
+                            .asJsonObject
+                            .getAsJsonObject("message")
+                            .get("content")
+                            .asString
+                        Log.d("voice command", content)
+                        viewModel.setCommandProcessed(content)
+                    } else {
+                        Log.e("NavigationAssistant", "Response does not contain valid 'choices': $responseBody")
+                    }
+                } catch (e: Exception) {
+                    Log.e("NavigationAssistant", "Error parsing response: ${e.message}, body: $responseBody")
                 }
             }
         })
