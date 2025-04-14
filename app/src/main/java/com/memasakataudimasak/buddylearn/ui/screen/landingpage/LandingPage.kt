@@ -1,5 +1,6 @@
 package com.memasakataudimasak.buddylearn.ui.screen.landingpage
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,17 +18,37 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.memasakataudimasak.buddylearn.AuthState
+import com.memasakataudimasak.buddylearn.AuthViewModel
 import com.memasakataudimasak.buddylearn.R
 import com.memasakataudimasak.buddylearn.data.Screen
 
 @Composable
-fun LandingPage(navController: NavController) {
+fun LandingPage(authViewModel: AuthViewModel, navController: NavController) {
+    val authState = authViewModel.authState.observeAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(authState.value) {
+        when(authState.value) {
+            is AuthState.Authenticated -> navController.navigate(Screen.Home.name) {
+                popUpTo(Screen.Landing.name) { inclusive = true }
+            }
+            is AuthState.Error -> Toast.makeText(context,
+                (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT).show()
+            else -> Unit
+        }
+    }
+
+
     Row (
         modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
         horizontalArrangement = Arrangement.Center

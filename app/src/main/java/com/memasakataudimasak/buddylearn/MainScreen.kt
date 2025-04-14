@@ -198,6 +198,7 @@ fun MainScreen(
                 }
                 composable(Screen.Landing.name) {
                     LandingPage(
+                        authViewModel = authViewModel,
                         navController = navController
                     )
                 }
