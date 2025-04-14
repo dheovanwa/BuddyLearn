@@ -58,6 +58,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.composed
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
@@ -70,7 +71,11 @@ import com.memasakataudimasak.buddylearn.ui.screen.learn.Learn
 import com.memasakataudimasak.buddylearn.ui.screen.learn.LearnUiState
 import com.memasakataudimasak.buddylearn.ui.screen.learn.LearnViewModel
 import com.memasakataudimasak.buddylearn.ui.screen.login.Login
+import com.memasakataudimasak.buddylearn.ui.screen.settings.SaveChangesDialog
+import com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility.AccessibilityScreen
+import com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility.AccessibilityViewModel
 import com.memasakataudimasak.buddylearn.ui.screen.signup.Register
+import com.memasakataudimasak.buddylearn.ui.theme.BuddyLearnTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun Modifier.speakOnLongPress(
@@ -269,7 +274,8 @@ fun MainScreen(
     context: Context,
     activity: Activity,
     viewModel: ViewModel = viewModel(),
-    authViewModel: AuthViewModel = viewModel(),
+    accessibilityViewModel: AccessibilityViewModel = viewModel(),
+    authViewModel: AuthViewModel = viewModel()
     learnViewModel: LearnViewModel = viewModel(),
 ) {
     val navController = rememberNavController()
@@ -287,6 +293,26 @@ fun MainScreen(
     val learnUiState by learnViewModel.uiState.collectAsState()
     val authState = authViewModel.authState.observeAsState()
 
+    val sharedPreferences = LocalContext.current.getSharedPreferences("app_prefs", Activity.MODE_PRIVATE)
+    val savedTheme = sharedPreferences.getString("selected_theme", "light") ?: "light"
+
+    val accessibilityUiState by accessibilityViewModel.uiState.collectAsState()
+    var theme = savedTheme
+
+    LaunchedEffect(accessibilityUiState.theme) {
+        theme = accessibilityUiState.theme
+        Log.d("theme main", accessibilityUiState.theme)
+    }
+
+
+    BuddyLearnTheme(selectedTheme = theme, dynamicColor = false) {
+        TtsBox(
+            tts = ttsManager.returnTts(),
+            viewModel = viewModel,
+            currentScreen = currentScreen,
+            startVoiceIntent = { ttsManager.startVoiceIntent(uiState.isEnglish) },
+            modifier = Modifier.fillMaxSize(),
+        ) {
     var startScreen by remember { mutableStateOf<Screen>(Screen.Home) }
     LaunchedEffect(authState.value) {
         when(authState.value) {

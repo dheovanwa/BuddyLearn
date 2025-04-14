@@ -1,16 +1,26 @@
 package com.memasakataudimasak.buddylearn
 
+import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility.AccessibilityScreen
+import com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility.AccessibilityViewModel
 import com.memasakataudimasak.buddylearn.data.TtsManager
 import com.memasakataudimasak.buddylearn.ui.screen.learn.Learn
 import com.memasakataudimasak.buddylearn.ui.theme.BuddyLearnTheme
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 
 class MainActivity : ComponentActivity() {
 
@@ -19,9 +29,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            BuddyLearnTheme {
-                MainScreen(this, this)
-            }
+            MainScreen(this, this)
         }
     }
 }
