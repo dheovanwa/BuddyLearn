@@ -145,7 +145,8 @@ fun MainContent(
 
     NavHost(
         navController = navController,
-        startDestination = startScreen.name,
+//        startDestination = startScreen.name,
+        startDestination = Screen.Learn.name,
         modifier = Modifier.padding(innerPadding)
     ) {
         composable(Screen.Home.name) {
@@ -182,7 +183,7 @@ fun MainContent(
         }
         composable(Screen.Learn.name) {
             Learn(
-
+                ttsManager = ttsManager
             )
         }
         composable(Screen.Settings.name) {
