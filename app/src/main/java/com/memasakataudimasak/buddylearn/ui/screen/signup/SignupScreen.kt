@@ -40,7 +40,10 @@ import com.memasakataudimasak.buddylearn.AuthViewModel
 import androidx.navigation.NavController
 import com.memasakataudimasak.buddylearn.data.Screen
 import com.memasakataudimasak.buddylearn.AuthState
-
+import androidx.compose.foundation.layout.Row
+import androidx.compose.ui.graphics.Color.Companion.Red
+import androidx.compose.ui.graphics.Color.Companion.Unspecified
+import kotlin.text.ifEmpty
 
 @Composable
 fun Register(authViewModel: AuthViewModel, navController: NavController) {
@@ -48,78 +51,58 @@ fun Register(authViewModel: AuthViewModel, navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    var emailError by remember { mutableStateOf("") }
+    var passwordError by remember { mutableStateOf("") }
+    var confirmPasswordError by remember { mutableStateOf("") }
 
     val authState = authViewModel.authState.observeAsState()
     val context = LocalContext.current
 
     LaunchedEffect(authState.value) {
         when(authState.value) {
-            is AuthState.Authenticated -> navController.navigate(Screen.Home.name)
+            is AuthState.Authenticated -> navController.navigate(Screen.Home.name) {
+                popUpTo(Screen.Signup.name) { inclusive = true }
+            }
             is AuthState.Error -> Toast.makeText(context,
                 (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT).show()
             else -> Unit
         }
     }
 
-    Button(onClick = {},
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent,
-            contentColor = Color.Unspecified)) {
-        Image(
-            painter = painterResource(id = R.drawable.back_button),
-            contentDescription = "Back button",
-            modifier = Modifier.size(16.dp))
+    Row {
+        Button(onClick = {},
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = Color.Unspecified)) {
+            Image(
+                painter = painterResource(id = R.drawable.back_button),
+                contentDescription = "Back button",
+                modifier = Modifier.size(16.dp))
+        }
     }
 
-    Column (
-        modifier = Modifier.fillMaxSize().padding(vertical = 160.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Let’s create your account!", fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
-    }
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        OutlinedTextField(value = email, onValueChange = { email = it }, modifier = Modifier.width(300.dp), label = {
-            Text(text = "Email")
-        })
+        Text("Let’s create your account!", fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
 
-        Spacer(modifier = Modifier.height(43.5.dp))
+        Spacer(modifier = Modifier.height(101.5.dp))
 
-        OutlinedTextField(value = password, onValueChange = { password = it }, modifier = Modifier.width(300.dp),
-            visualTransformation = if (showPassword) {
-                VisualTransformation.None
-            } else {
-                PasswordVisualTransformation()
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            trailingIcon = {
-                if (showPassword) {
-                    IconButton(onClick = { showPassword = false }) {
-                        Icon(
-                            imageVector = Icons.Filled.Visibility,
-                            contentDescription = "hide_password"
-                        )
-                    }
-                } else {
-                    IconButton(
-                        onClick = { showPassword = true }) {
-                        Icon(
-                            imageVector = Icons.Filled.VisibilityOff,
-                            contentDescription = "hide_password"
-                        )
-                    }
-                }
-            }, label = {
-                Text(text = "Password")
-            }
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            modifier = Modifier.width(300.dp),
+            label = { Text(emailError.ifEmpty { "Email" }, color = if(emailError.isNotEmpty()) Red else Unspecified) }
         )
 
         Spacer(modifier = Modifier.height(43.5.dp))
 
-        OutlinedTextField(value = confirmPassword, onValueChange = { confirmPassword = it }, modifier = Modifier.width(300.dp),
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            modifier = Modifier.width(300.dp),
             visualTransformation = if (showPassword) {
                 VisualTransformation.None
             } else {
@@ -143,16 +126,62 @@ fun Register(authViewModel: AuthViewModel, navController: NavController) {
                         )
                     }
                 }
-            }, label = {
-                Text(text = "Confirm Password")
-            }
+            },
+            label = { Text(passwordError.ifEmpty { "Password" }, color = if(passwordError.isNotEmpty()) Red else Unspecified) }
+        )
+
+        Spacer(modifier = Modifier.height(43.5.dp))
+
+        OutlinedTextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            modifier = Modifier.width(300.dp),
+            visualTransformation = if (showPassword) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            trailingIcon = {
+                if (showPassword) {
+                    IconButton(onClick = { showPassword = false }) {
+                        Icon(
+                            imageVector = Icons.Filled.Visibility,
+                            contentDescription = "hide_password"
+                        )
+                    }
+                } else {
+                    IconButton(
+                        onClick = { showPassword = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.VisibilityOff,
+                            contentDescription = "hide_password"
+                        )
+                    }
+                }
+            },
+            label = { Text(confirmPasswordError.ifEmpty { "Confirm password" }, color = if(confirmPasswordError.isNotEmpty()) Red else Unspecified) }
         )
 
         Spacer(modifier = Modifier.height(39.dp))
 
         Button(
             onClick = {
-                authViewModel.signup(email, password)
+                emailError =
+                    if(email.isBlank()) "Email is required!"
+                    else if(!email.contains("@")) "Email must contain '@'!"
+                    else ""
+                passwordError =
+                    if(password.isBlank()) "Password is required!"
+                    else if(password.length < 8) "Password must have at least 8 characters!"
+                    else ""
+                confirmPasswordError =
+                    if(confirmPassword.isBlank()) "Confirm is required!"
+                    else if(confirmPassword != password) "Must be same with password!"
+                    else ""
+                if(emailError.isEmpty() && passwordError.isEmpty() && confirmPasswordError.isEmpty()) {
+                    authViewModel.signup(email, password)
+                }
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFADF9B2),
