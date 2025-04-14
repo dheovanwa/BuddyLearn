@@ -16,6 +16,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility.AccessibilityScreen
 import com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility.AccessibilityViewModel
+import com.memasakataudimasak.buddylearn.data.TtsManager
+import com.memasakataudimasak.buddylearn.ui.screen.learn.Learn
 import com.memasakataudimasak.buddylearn.ui.theme.BuddyLearnTheme
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue

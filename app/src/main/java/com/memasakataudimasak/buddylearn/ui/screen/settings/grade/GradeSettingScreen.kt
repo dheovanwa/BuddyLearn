@@ -49,56 +49,17 @@ fun CustomSlider(
         modifier = Modifier.padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            for (i in 14..22) {
-                if (i == 14) {
-                    Text(
-                        text = i.toString(),
-                        fontSize = 12.sp,
-                    )
-                } else if (i == 22) {
-                    // Last item - Align end
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = i.toString(),
-                        fontSize = 12.sp,
-                    )
-                } else {
-                    // Middle items - Align center (using Spacer to center the items)
-                    Spacer(modifier = Modifier.weight(1f))
-                    Box(
-                        modifier = Modifier
-                            .weight(1f),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = i.toString(),
-                            fontSize = 12.sp
-                        )
-                    }
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Slider with ticks
         Slider(
             value = uiState.sliderGradeValue,
             onValueChange = {
                 sliderValue = it
                 viewModel.setSliderGradeValue(sliderValue)
                             },
-            valueRange = 0f..8f,
-            steps = 7, // 8 steps means 7 in-between steps
+            valueRange = 0f..12f,
+            steps = 11, // 8 steps means 7 in-between steps
             modifier = Modifier.fillMaxWidth(),
             colors = SliderDefaults.colors(
                 activeTrackColor = Color(0xFF66E0C2),
-                inactiveTrackColor = Color(0xFFE0E0E0),
-                thumbColor = Color.Black
             )
         )
     }

@@ -42,77 +42,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.memasakataudimasak.buddylearn.AuthState
+import com.memasakataudimasak.buddylearn.AuthViewModel
 import com.memasakataudimasak.buddylearn.R
 import com.memasakataudimasak.buddylearn.ViewModel
 import com.memasakataudimasak.buddylearn.ui.theme.BuddyLearnTheme
-
-@Composable
-fun SaveChangesDialog(
-    showDialog: Boolean,
-    onDismiss: () -> Unit,
-    onSave: () -> Unit,
-    onDontSave: () -> Unit
-) {
-    if (showDialog) {
-        Dialog(onDismissRequest = { onDismiss() }) {
-            Surface(
-                shape = RoundedCornerShape(24.dp),
-                color = Color.White,
-                shadowElevation = 10.dp,
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Save Changes?",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Text(
-                        text = "Your changes will be lost if you don’t save them.",
-                        fontSize = 14.sp,
-                        textAlign = TextAlign.Center
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        // Don't Save Button
-                        Button(
-                            onClick = { onDontSave() },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFD6D6)),
-                            shape = RoundedCornerShape(16.dp),
-                            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text("Don't Save", color = Color.Black)
-                        }
-
-                        // Save Button
-                        Button(
-                            onClick = { onSave() },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD6FFD6)),
-                            shape = RoundedCornerShape(16.dp),
-                            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text("Save", color = Color.Black)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun LanguageDialog(
@@ -122,39 +56,36 @@ fun LanguageDialog(
     viewModel: ViewModel
 ) {
     if (showDialog) {
-        BuddyLearnTheme {
-            Dialog(onDismissRequest = { onDismiss() }) {
-                Surface(
-                    shape = RoundedCornerShape(3.dp),
-                    color = Color.White,
-                    shadowElevation = 8.dp
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = "Bahasa Indonesia",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    onLanguageSelected("Bahasa Indonesia")
-                                    viewModel.setIsEnglish(false)
-                                    onDismiss()
-                                }
-                                .padding(12.dp),
-                            fontSize = 16.sp
-                        )
-                        Text(
-                            text = "English",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    onLanguageSelected("English")
-                                    viewModel.setIsEnglish(true)
-                                    onDismiss()
-                                }
-                                .padding(12.dp),
-                            fontSize = 16.sp
-                        )
-                    }
+        Dialog(onDismissRequest = { onDismiss() }) {
+            Surface(
+                shape = RoundedCornerShape(3.dp),
+                shadowElevation = 8.dp
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Bahasa Indonesia",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onLanguageSelected("Bahasa Indonesia")
+                                viewModel.setIsEnglish(false)
+                                onDismiss()
+                            }
+                            .padding(12.dp),
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = "English",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onLanguageSelected("English")
+                                viewModel.setIsEnglish(true)
+                                onDismiss()
+                            }
+                            .padding(12.dp),
+                        fontSize = 16.sp
+                    )
                 }
             }
         }
@@ -199,17 +130,13 @@ fun SettingsScreen(
     isEnglish: Boolean = true,
     onAccessibilitySettingsClicked: () -> Unit = {},
     onGradeSettingClicked: () -> Unit = {},
-    onLanguageSettingClicked: () -> Unit = {},
     onNavigateBack: () -> Unit = {},
+    onSignOut: () -> Unit = {},
     viewModel: ViewModel,
 ) {
     var selectedLanguage by remember { mutableStateOf("English") }
     var showDialog by remember { mutableStateOf(false) }
     val uiState by viewModel.uiState.collectAsState()
-
-//    BackHandler {
-//        showDialog = true
-//    }
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -310,7 +237,7 @@ fun SettingsScreen(
                 .fillMaxWidth()
         ) {
             Button(
-                onClick = {},
+                onClick = onSignOut,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(15.dp)
@@ -336,19 +263,6 @@ fun SettingsScreen(
             }
         }
     }
-//    SaveChangesDialog(
-//        showDialog = showDialog,
-//        onDismiss = { showDialog = false },
-//        onSave = {
-//            // Simpan data kalau perlu
-//            showDialog = false
-//            onNavigateBack()
-//        },
-//        onDontSave = {
-//            showDialog = false
-//            onNavigateBack()
-//        }
-//    )
 }
 
 @Preview(showBackground = true)
@@ -356,6 +270,6 @@ fun SettingsScreen(
 fun SettingsScreenPreview() {
     SettingsScreen(
         grade = 1,
-        viewModel = ViewModel()
+        viewModel = ViewModel(),
     )
 }

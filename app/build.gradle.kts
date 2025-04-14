@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.firebase.config)
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

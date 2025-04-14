@@ -8,4 +8,6 @@
     <string name="back_button">Back to upper page</string>
     <string name="login">Login</string>
     <string name="signup">Signup</string>
+    <string name="landing">Landing</string>
+    <string name="learn">Learn</string>
 </resources>
