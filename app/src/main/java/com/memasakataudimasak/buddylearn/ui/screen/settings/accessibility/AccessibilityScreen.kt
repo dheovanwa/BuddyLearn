@@ -1,6 +1,7 @@
 package com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,7 +57,7 @@ import com.memasakataudimasak.buddylearn.ui.theme.BuddyLearnTheme
 
 @Composable
 fun CustomSlider(
-    viewModel: ViewModel
+    viewModel: AccessibilityViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var sliderValue by remember { mutableFloatStateOf(uiState.fontSize.toFloat()) } // Start at 16
@@ -82,13 +83,13 @@ fun CustomSlider(
 
         // Slider with ticks
         Slider(
-            value = uiState.sliderGradeValue,
+            value = uiState.textSizeSliderValue,
             onValueChange = {
                 sliderValue = it
-                viewModel.setSliderGradeValue(sliderValue)
+                viewModel.setTextSizeSliderValue(sliderValue)
             },
-            valueRange = 0f..8f,
-            steps = 7, // 8 steps means 7 in-between steps
+            valueRange = 0f..7f,
+            steps = 6, // 8 steps means 7 in-between steps
             modifier = Modifier.fillMaxWidth(),
             colors = SliderDefaults.colors(
                 activeTrackColor = Color(0xFF66E0C2),
@@ -101,10 +102,10 @@ fun CustomSlider(
 
 @Composable
 fun CustomSliderWeight(
-    viewModel: ViewModel
+    viewModel: AccessibilityViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var sliderValue by remember { mutableFloatStateOf(uiState.fontWeights.toFloat()) } // Start at 2
+    var sliderValue by remember { mutableFloatStateOf(uiState.fontWeight.toFloat()) } // Start at 2
 
     Column(
         modifier = Modifier.padding(24.dp),
@@ -137,13 +138,13 @@ fun CustomSliderWeight(
 
         // Slider with ticks
         Slider(
-            value = uiState.sliderGradeValue,
+            value = uiState.textWeightSliderValue,
             onValueChange = {
                 sliderValue = it
-                viewModel.setSliderGradeValue(sliderValue)
+                viewModel.setTextWeightSliderValue(sliderValue)
             },
-            valueRange = 0f..8f,
-            steps = 7, // 8 steps means 7 in-between steps
+            valueRange = 1f..4f,
+            steps = 2, // 8 steps means 7 in-between steps
             modifier = Modifier.fillMaxWidth(),
             colors = SliderDefaults.colors(
                 activeTrackColor = Color(0xFF66E0C2),
@@ -156,7 +157,7 @@ fun CustomSliderWeight(
 
 @Composable
 fun AccessibilityScreen(
-    viewModel: ViewModel
+    viewModel: AccessibilityViewModel
 
 ) {
     // Retrieve the previously selected theme from SharedPreferences, or default to "light"
@@ -165,8 +166,8 @@ fun AccessibilityScreen(
     val savedFontFamily = sharedPreferences.getString("selected_font_family", "serif") ?: "serif"
     val savedLayout = sharedPreferences.getString("selected_layout", "compact") ?: "compact"
 
+    val uiState by viewModel.uiState.collectAsState()
 
-//    var selectedTheme by remember { mutableStateOf<String?>("Light") }
     var selectedTheme by remember { mutableStateOf(savedTheme)}
     var selectedFontFamily by remember { mutableStateOf(savedFontFamily)}
     var selectedLayout by remember { mutableStateOf(savedLayout)}
@@ -174,6 +175,9 @@ fun AccessibilityScreen(
     fun saveSelectedTheme(theme: String) {
         selectedTheme = theme
         sharedPreferences.edit().putString("selected_theme", theme).apply()
+        Log.d("theme main setting", theme)
+
+        viewModel.setTheme(selectedTheme)
     }
 
     fun saveSelectedFont(font: String) {
@@ -416,11 +420,10 @@ fun AccessibilityScreen(
                 fontSize = 16.sp
 //                fontFamily = FontFamily(R.font.monda),
             )
-            var checked by remember { mutableStateOf(true) }
             Switch(
-                checked = checked,
+                checked = uiState.isSpeechRecognitionOn,
                 onCheckedChange = {
-                    checked = it
+                    viewModel.setIsSpeechRecognitionOn(it)
                 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = MaterialTheme.colorScheme.primary,
@@ -429,7 +432,7 @@ fun AccessibilityScreen(
                     uncheckedTrackColor = MaterialTheme.colorScheme.secondaryContainer,
                 ),
 
-                thumbContent = if (checked) {
+                thumbContent = if (uiState.isSpeechRecognitionOn) {
                     {
                         Icon(
                             imageVector = Icons.Filled.Check,

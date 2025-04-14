@@ -113,15 +113,15 @@ fun BuddyLearnTheme(
         }
     }
 
-    val finalColorScheme = if (dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        val context = LocalContext.current
-        if (isSysteminDarkMode) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-    } else {
-        colorScheme
-    }
+//    val finalColorScheme = if (dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//        val context = LocalContext.current
+//        if (isSysteminDarkMode) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+//    } else {
+//        colorScheme
+//    }
 
     MaterialTheme(
-        colorScheme = finalColorScheme,
+        colorScheme = colorScheme,
         typography = Typography,
         content = content
     )

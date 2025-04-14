@@ -55,13 +55,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.composed
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.memasakataudimasak.buddylearn.data.NavigationAssistant
 import com.memasakataudimasak.buddylearn.data.UiState
 import com.memasakataudimasak.buddylearn.ui.screen.login.Login
 import com.memasakataudimasak.buddylearn.ui.screen.settings.SaveChangesDialog
+import com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility.AccessibilityScreen
+import com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility.AccessibilityViewModel
 import com.memasakataudimasak.buddylearn.ui.screen.signup.Register
+import com.memasakataudimasak.buddylearn.ui.theme.BuddyLearnTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun Modifier.speakOnLongPress(
@@ -130,7 +134,8 @@ fun MainScreen(
     context: Context,
     activity: Activity,
     viewModel: ViewModel = viewModel(),
-    authViewModel: AuthViewModel = AuthViewModel()
+    accessibilityViewModel: AccessibilityViewModel = viewModel(),
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -145,101 +150,141 @@ fun MainScreen(
 
     val uiState by viewModel.uiState.collectAsState()
 
-    TtsBox(
-        tts = ttsManager.returnTts(),
-        viewModel = viewModel,
-        currentScreen = currentScreen,
-        startVoiceIntent = { ttsManager.startVoiceIntent(uiState.isEnglish) },
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        Scaffold(
-            topBar = {
-                MainScreenBar(
-                    currentScreen = currentScreen,
-                    canNavigateBack = navController.previousBackStackEntry != null,
-                    navigateUp = { navController.navigateUp() },
-                    navController = navController,
-                )
-            },
-            modifier = Modifier.fillMaxSize()
-        ) { innerPadding ->
+    val sharedPreferences = LocalContext.current.getSharedPreferences("app_prefs", Activity.MODE_PRIVATE)
+    val savedTheme = sharedPreferences.getString("selected_theme", "light") ?: "light"
 
-            NavHost(
-                navController = navController,
-                startDestination = Screen.Login.name,
-                modifier = Modifier.padding(innerPadding)
-            ) {
-                composable(Screen.Home.name) {
-                    Column(Modifier.padding(16.dp)) {
-                        Text("Ini adalah Home Screen")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Button(onClick = {
-                            navController.navigate(Screen.Settings.name)
-                        },
-                            modifier = Modifier
-                                .speakOnLongPress(tts = ttsManager.returnTts(), ttsEnabled = uiState.onTextToSpeech, text = "Ini adalah tombol menuju pengaturan")
-                        ) {
-                            Text("Go to Settings")
+    val accessibilityUiState by accessibilityViewModel.uiState.collectAsState()
+    var theme = savedTheme
+
+    LaunchedEffect(accessibilityUiState.theme) {
+        theme = accessibilityUiState.theme
+        Log.d("theme main", accessibilityUiState.theme)
+    }
+
+
+    BuddyLearnTheme(selectedTheme = theme, dynamicColor = false) {
+        TtsBox(
+            tts = ttsManager.returnTts(),
+            viewModel = viewModel,
+            currentScreen = currentScreen,
+            startVoiceIntent = { ttsManager.startVoiceIntent(uiState.isEnglish) },
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            Scaffold(
+                topBar = {
+                    MainScreenBar(
+                        currentScreen = currentScreen,
+                        canNavigateBack = navController.previousBackStackEntry != null,
+                        navigateUp = { navController.navigateUp() },
+                        navController = navController,
+                    )
+                },
+                modifier = Modifier.fillMaxSize()
+            ) { innerPadding ->
+
+                NavHost(
+                    navController = navController,
+                    startDestination = Screen.Accessibility.name,
+                    modifier = Modifier.padding(innerPadding)
+                ) {
+                    composable(Screen.Home.name) {
+                        Column(Modifier.padding(16.dp)) {
+                            Text("Ini adalah Home Screen")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Button(
+                                onClick = {
+                                    navController.navigate(Screen.Settings.name)
+                                },
+                                modifier = Modifier
+                                    .speakOnLongPress(
+                                        tts = ttsManager.returnTts(),
+                                        ttsEnabled = uiState.onTextToSpeech,
+                                        text = "Ini adalah tombol menuju pengaturan"
+                                    )
+                            ) {
+                                Text("Go to Settings")
+                            }
                         }
                     }
-                }
-                composable(Screen.Login.name) {
-                    Login(
-                        navController = navController,
-                        authViewModel = authViewModel
-                    )
-                }
-                composable(Screen.Signup.name) {
-                    Register(
-                        navController = navController,
-                        authViewModel = authViewModel
-                    )
-                }
-                composable(Screen.Settings.name) {
-                    SettingsScreen(
-                        grade = uiState.grade,
-                        isEnglish = uiState.isEnglish,
-                        onGradeSettingClicked = { navController.navigate((Screen.Grade.name)) },
-                        onNavigateBack = {navController.popBackStack()},
-                        viewModel = viewModel
-                    )
-                }
-                composable(Screen.Grade.name) {
-                    GradeSettingScreen(
-                        viewModel = viewModel
-                    )
+
+                    composable(Screen.Accessibility.name) {
+                        AccessibilityScreen(viewModel = accessibilityViewModel)
+                    }
+
+                    composable(Screen.Login.name) {
+                        Login(
+                            navController = navController,
+                            authViewModel = authViewModel
+                        )
+                    }
+                    composable(Screen.Signup.name) {
+                        Register(
+                            navController = navController,
+                            authViewModel = authViewModel
+                        )
+                    }
+                    composable(Screen.Settings.name) {
+                        SettingsScreen(
+                            grade = uiState.grade,
+                            isEnglish = uiState.isEnglish,
+                            onGradeSettingClicked = { navController.navigate((Screen.Grade.name)) },
+                            onNavigateBack = { navController.popBackStack() },
+                            viewModel = viewModel
+                        )
+                    }
+                    composable(Screen.Grade.name) {
+                        GradeSettingScreen(
+                            viewModel = viewModel
+                        )
+                    }
+
                 }
 
-            }
+                LaunchedEffect(uiState.commandProcessed) {
+                    val commands = uiState.commandProcessed.split(",")
+                    val isEnglish = uiState.isEnglish
 
-            LaunchedEffect(uiState.commandProcessed) {
-                val commands = uiState.commandProcessed.split(",")
-                val isEnglish = uiState.isEnglish
+                    when (commands[0]) {
+                        "go-to-home-screen" -> {
+                            navController.navigate(Screen.Home.name)
+                            ttsManager.feedback(
+                                if (!isEnglish) "To home page" else "Menuju halaman utama",
+                                isEnglish
+                            )
+                        }
 
-                when (commands[0]) {
-                    "go-to-home-screen" -> {
-                        navController.navigate(Screen.Home.name)
-                        ttsManager.feedback(if (!isEnglish) "To home page" else "Menuju halaman utama", isEnglish)
+                        "go-to-settings-screen" -> {
+                            navController.navigate(Screen.Settings.name)
+                            ttsManager.feedback(
+                                if (isEnglish) "To settings page" else "Menuju pengaturan",
+                                isEnglish
+                            )
+                        }
+
+                        "change-language" -> {
+                            viewModel.setIsEnglish(commands[1].toBoolean())
+                            ttsManager.feedback(
+                                if (isEnglish) "Changed language to Indonesia" else "Mengubah bahasa menjadi bahasa Inggris",
+                                isEnglish
+                            )
+                        }
+
+                        "change-grade" -> {
+                            viewModel.setGrade(commands[1].toInt())
+                            ttsManager.feedback(
+                                if (isEnglish) "Changed grade to ${commands[1]}" else "Mengubah kelas menjadi kelas ${commands[1]}",
+                                isEnglish
+                            )
+                        }
+
+                        "back" -> navController.navigateUp()
                     }
-                    "go-to-settings-screen" -> {
-                        navController.navigate(Screen.Settings.name)
-                        ttsManager.feedback(if (isEnglish) "To settings page" else "Menuju pengaturan", isEnglish)
-                    }
-                    "change-language" -> {
-                        viewModel.setIsEnglish(commands[1].toBoolean())
-                        ttsManager.feedback(if (isEnglish) "Changed language to Indonesia" else "Mengubah bahasa menjadi bahasa Inggris", isEnglish)
-                    }
-                    "change-grade" -> {
-                        viewModel.setGrade(commands[1].toInt())
-                        ttsManager.feedback(if (isEnglish) "Changed grade to ${commands[1]}" else "Mengubah kelas menjadi kelas ${commands[1]}", isEnglish)
-                    }
-                    "back" -> navController.navigateUp()
-                }
 
 //                Log.d("voice command in main", "${uiState.commandProcessed}")
+                }
             }
-        }
 
+        }
     }
 
 
