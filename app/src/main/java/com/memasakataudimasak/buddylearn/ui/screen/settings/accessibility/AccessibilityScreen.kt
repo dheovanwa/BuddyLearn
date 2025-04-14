@@ -63,14 +63,14 @@ fun CustomSlider(
                 if(i == 14){
                     Text(
                         text = i.toString(),
-                        fontSize = 12.sp,
+                        fontSize = if (uiState.fontFamily != "opendyslexic") 12.sp else 10.sp,
                     )
                 }else if (i == 22) {
                     // Last item - Align end
                     Spacer(modifier = Modifier.weight(1f))
                     Text(
                         text = i.toString(),
-                        fontSize = 12.sp,
+                        fontSize = if (uiState.fontFamily != "opendyslexic") 12.sp else 10.sp,
                     )
                 } else {
                     // Middle items - Align center (using Spacer to center the items)
@@ -82,7 +82,7 @@ fun CustomSlider(
                     ) {
                         Text(
                             text = i.toString(),
-                            fontSize = 12.sp
+                            fontSize = if (uiState.fontFamily != "opendyslexic") 12.sp else 10.sp,
                         )
                     }
                 }
@@ -287,7 +287,6 @@ fun AccessibilityScreen(
                         text = "Color Theme",
                         color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 16.sp,
-                        //                      fontFamily = R.font.monda,
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
@@ -466,9 +465,7 @@ fun AccessibilityScreen(
         ) {
             Text(
                 "Speech Recognition",
-//                color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 16.sp
-//                fontFamily = FontFamily(R.font.monda),
             )
             Switch(
                 checked = uiState.isSpeechRecognitionOn,
@@ -543,7 +540,7 @@ fun AccessibilityScreen(
                         color = Color(0xFF363636),
                         textAlign = TextAlign.Center,
                         fontSize = 16.sp,
-//                                fontFamily = FontFamily(R.font.roboto.medium))
+                        fontFamily = FontFamily(Font(R.font.roboto_medium)),
                     )
                 }
 
@@ -563,7 +560,7 @@ fun AccessibilityScreen(
                         color = Color(0xFF363636),
                         textAlign = TextAlign.Center,
                         fontSize = 16.sp,
-//                                fontFamily = FontFamily(R.font.georgia))
+                        fontFamily = FontFamily.Serif
                     )
                 }
 
@@ -584,7 +581,6 @@ fun AccessibilityScreen(
                         fontFamily = FontFamily(Font(R.font.open_dyslexic)),
                         textAlign = TextAlign.Center,
                         fontSize = 11.sp,
-//                                fontFamily = FontFamily(Font(R.font.open_dyslexic)))
                     )
                 }
             }
@@ -600,7 +596,6 @@ fun AccessibilityScreen(
                 text = "Text Size",
                 color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 16.sp,
-                //                      fontFamily = R.font.monda,
                 modifier = Modifier.fillMaxWidth(),
             )
             CustomSlider(viewModel)
@@ -616,7 +611,6 @@ fun AccessibilityScreen(
                 text = "Text Weight",
                 color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 16.sp,
-                //                      fontFamily = R.font.monda,
                 modifier = Modifier.fillMaxWidth(),
             )
             CustomSliderWeight(viewModel)
