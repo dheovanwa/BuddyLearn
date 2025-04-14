@@ -145,8 +145,8 @@ fun MainContent(
 
     NavHost(
         navController = navController,
-//        startDestination = startScreen.name,
-        startDestination = Screen.Learn.name,
+        startDestination = startScreen.name,
+//        startDestination = Screen.Landing.name,
         modifier = Modifier.padding(innerPadding)
     ) {
         composable(Screen.Home.name) {

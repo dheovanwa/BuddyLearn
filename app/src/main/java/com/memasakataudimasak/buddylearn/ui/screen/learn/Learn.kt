@@ -45,18 +45,17 @@ fun Learn(
     globalViewModel: ViewModel = viewModel(),
     ttsManager: TtsManager,
     ) {
-//    var learnList by remember { mutableStateOf<List<LearnUiState>>(emptyList()) }
-//    var currentIndex by remember { mutableStateOf(0) }
     val learnUiState by learnViewModel.uiState.collectAsState()
     val globalUiState by globalViewModel.uiState.collectAsState()
 
     val learnList = learnUiState.learnList
     val currentIndex = learnUiState.currentIndex
 
-    Box(
-        modifier = Modifier.fillMaxSize()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
-//        currentItem = learnList[currentIndex]
         val currentItem = learnUiState.learnList.getOrNull(learnUiState.currentIndex)
         val scrollState = rememberScrollState()
 
@@ -65,7 +64,7 @@ fun Learn(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp)
+                    .weight(1f)
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -93,15 +92,13 @@ fun Learn(
                             )
                             Spacer(modifier = Modifier.height(20.dp))
                         }
-
                     } else {
                         Text(
-                            text = currentItem?.sectionTitle.toString(),
-//                            style = MaterialTheme.typography.headlineMedium
+                            text = currentItem?.sectionTitle.toString()
                         )
 
                         var selectedIndex by remember { mutableStateOf<Int?>(null) }
-                        val correctAnswerIndex = currentItem?.answer ?: 0 // atau ambil dari LearnItem
+                        val correctAnswerIndex = currentItem?.answer ?: 0
 
                         currentItem?.value?.forEachIndexed { index, option ->
                             val isSelected = selectedIndex == index
@@ -109,10 +106,10 @@ fun Learn(
                             val isAnswered = selectedIndex != null
 
                             val backgroundColor = when {
-                                !isAnswered -> Color(0x03B7B7B7) // default
-                                isSelected && isCorrect -> Color(0xFF4CAF50) // green
-                                isSelected && !isCorrect -> Color(0xFFF44336) // red
-                                else -> Color(0x03B7B7B7) // others stay default
+                                !isAnswered -> Color(0x03B7B7B7)
+                                isSelected && isCorrect -> Color(0xFF4CAF50)
+                                isSelected && !isCorrect -> Color(0xFFF44336)
+                                else -> Color(0x03B7B7B7)
                             }
 
                             Button(
@@ -141,45 +138,55 @@ fun Learn(
 
                 }
             }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                IconButton(
-                    onClick = {
-                        if (currentIndex > 0) learnViewModel.setCurrentIndex(currentIndex-1)
-                    },
-                    enabled = currentIndex > 0) {
-                    Image(
-                        painter = painterResource(id = R.drawable.back_button),
-                        contentDescription = "Back button",
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Text(text = "Previous Question")
-                }
-
-                IconButton(onClick = {
-                    if (currentIndex < learnList.size - 1) learnViewModel.setCurrentIndex(currentIndex+1)
-                },
-                enabled = currentIndex < learnList.size - 1) {
-                    Text(text = "Next Question")
-                    Image(
-                        painter = painterResource(id = R.drawable.next_button),
-                        contentDescription = "Next button",
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-            }
         } else {
             Text(
                 text = "Loading...",
-                modifier = Modifier.align(Alignment.Center),
                 style = MaterialTheme.typography.bodyLarge
             )
+        }
+
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                onClick = {
+                    if (currentIndex > 0) learnViewModel.setCurrentIndex(currentIndex-1)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = Color.Black
+                ),
+                enabled = currentIndex > 0) {
+                Image(
+                    painter = painterResource(id = R.drawable.back_button),
+                    contentDescription = "Back button",
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = "Previous Question")
+            }
+
+            Button(
+                onClick = {
+                    if (currentIndex < learnList.size - 1) learnViewModel.setCurrentIndex(currentIndex+1)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = Color.Black
+                ),
+                enabled = currentIndex < learnList.size - 1) {
+                Text(text = "Next Question")
+                Spacer(modifier = Modifier.width(8.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.next_button),
+                    contentDescription = "Next button",
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
     }
 }

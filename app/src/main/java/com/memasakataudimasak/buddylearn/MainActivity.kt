@@ -20,9 +20,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BuddyLearnTheme {
-//                MainScreen(this, this)
-                val ttsManager = TtsManager(this, this)
-                Learn(ttsManager = ttsManager)
+                MainScreen(this, this)
+//                val ttsManager = TtsManager(this, this)
+//                Learn(ttsManager = ttsManager)
             }
         }
     }
