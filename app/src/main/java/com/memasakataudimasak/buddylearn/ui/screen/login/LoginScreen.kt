@@ -66,18 +66,6 @@ fun Login(navController: NavController, authViewModel: AuthViewModel) {
         }
     }
 
-    Row {
-        Button(onClick = {},
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Transparent,
-                contentColor = Color.Unspecified)) {
-            Image(
-                painter = painterResource(id = R.drawable.back_button),
-                contentDescription = "Back button",
-                modifier = Modifier.size(16.dp))
-        }
-    }
-
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
