@@ -2,6 +2,7 @@ package com.memasakataudimasak.buddylearn.ui.screen.settings.grade
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -52,12 +53,33 @@ fun CustomSlider(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            for (i in 0..8) {
-                Text(
-                    text = i.toString(),
-                    fontSize = 14.sp,
-                    modifier = Modifier.weight(1f),
-                )
+            for (i in 14..22) {
+                if (i == 14) {
+                    Text(
+                        text = i.toString(),
+                        fontSize = 12.sp,
+                    )
+                } else if (i == 22) {
+                    // Last item - Align end
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = i.toString(),
+                        fontSize = 12.sp,
+                    )
+                } else {
+                    // Middle items - Align center (using Spacer to center the items)
+                    Spacer(modifier = Modifier.weight(1f))
+                    Box(
+                        modifier = Modifier
+                            .weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = i.toString(),
+                            fontSize = 12.sp
+                        )
+                    }
+                }
             }
         }
 
