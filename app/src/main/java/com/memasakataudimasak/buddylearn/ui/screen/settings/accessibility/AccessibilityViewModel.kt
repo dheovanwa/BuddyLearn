@@ -42,7 +42,7 @@ class AccessibilityViewModel: ViewModel() {
                 theme = theme
             )
         }
-        Log.d("theme main di viewmodel", uiState.value.theme)
+        Log.d("Main theme in viewmodel", uiState.value.theme)
 
     }
 

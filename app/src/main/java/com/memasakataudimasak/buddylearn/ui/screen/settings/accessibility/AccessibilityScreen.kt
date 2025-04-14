@@ -32,6 +32,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -102,7 +104,13 @@ fun CustomSlider(
             colors = SliderDefaults.colors(
                 activeTrackColor = Color(0xFF66E0C2),
                 inactiveTrackColor = Color(0xFFE0E0E0),
-                thumbColor = Color.Black
+                thumbColor = when {
+                    (uiState.theme == "light") -> Color.Black
+                    (uiState.theme == "warm") -> Color.Black
+                    (uiState.theme == "cold") -> Color.Black
+                    (uiState.theme == "dark") -> Color(0xFFF2F6F6)
+                    else -> Color.Black // Default behavior for other themes
+                }
             )
         )
     }
@@ -113,7 +121,7 @@ fun CustomSliderWeight(
     viewModel: AccessibilityViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var sliderValue by remember { mutableFloatStateOf(uiState.fontWeight.toFloat()) } // Start at 2
+    var sliderValue by remember { mutableFloatStateOf(uiState.fontWeights.toFloat()) } // Start at 2
 
     Column(
         modifier = Modifier.padding(24.dp),
@@ -182,7 +190,13 @@ fun CustomSliderWeight(
             colors = SliderDefaults.colors(
                 activeTrackColor = Color(0xFF66E0C2),
                 inactiveTrackColor = Color(0xFFE0E0E0),
-                thumbColor = Color.Black
+                thumbColor = when {
+                    (uiState.theme == "light") -> Color.Black
+                    (uiState.theme == "warm") -> Color.Black
+                    (uiState.theme == "cold") -> Color.Black
+                    (uiState.theme == "dark") -> Color(0xFFF2F6F6)
+                    else -> Color.Black // Default behavior for other themes
+                }
             )
         )
     }
@@ -311,7 +325,7 @@ fun AccessibilityScreen(
                                 onClick = { saveSelectedTheme("light") },
                                 modifier = selectedButtonTheme("light")
                                     .height(120.dp)
-                                    .width(150.dp),
+                                    .width(132.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Color(0xFFFFFFFF),
                                     contentColor = Color(0xFF363636)
@@ -349,7 +363,7 @@ fun AccessibilityScreen(
                                 onClick = { saveSelectedTheme("dark") },
                                 modifier = selectedButtonTheme("dark")
                                     .height(120.dp)
-                                    .width(150.dp),
+                                    .width(132.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Color(0xFF363636),
                                     contentColor = Color(0xFF363636)
@@ -357,7 +371,7 @@ fun AccessibilityScreen(
                                 shape = RoundedCornerShape(14.dp)
                             ) {
                                 Text(
-                                    "Hello from the Dark",
+                                    "Hello from the Dark!",
                                     color = Color(0xFFFBFBFB),
                                     textAlign = TextAlign.Center
                                 )
@@ -391,7 +405,7 @@ fun AccessibilityScreen(
                                 onClick = { saveSelectedTheme("warm") },
                                 modifier = selectedButtonTheme("warm")
                                     .height(120.dp)
-                                    .width(150.dp),
+                                    .width(132.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Color(0xFFFAEDD3),
                                     contentColor = Color(0xFF363636)
@@ -429,7 +443,7 @@ fun AccessibilityScreen(
                                 onClick = { saveSelectedTheme("cold") },
                                 modifier = selectedButtonTheme("cold")
                                     .height(120.dp)
-                                    .width(150.dp),
+                                    .width(132.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Color(0xFFE8EDFC),
                                     contentColor = Color(0xFF363636)
@@ -466,8 +480,8 @@ fun AccessibilityScreen(
             Text(
                 "Speech Recognition",
                 color = MaterialTheme.colorScheme.onBackground,
-                fontSize = 16.sp
-//                fontFamily = FontFamily(R.font.monda),
+                fontSize = 16.sp,
+                fontFamily = FontFamily(Font(R.font.monda)),
             )
             Switch(
                 checked = uiState.isSpeechRecognitionOn,
@@ -562,7 +576,7 @@ fun AccessibilityScreen(
                         color = Color(0xFF363636),
                         textAlign = TextAlign.Center,
                         fontSize = 16.sp,
-//                                fontFamily = FontFamily(R.font.georgia))
+                        fontFamily = FontFamily(Font(R.font.georgia))
                     )
                 }
 
@@ -581,8 +595,8 @@ fun AccessibilityScreen(
                         "Open Dyslexic",
                         color = Color(0xFF363636),
                         textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-//                                fontFamily = FontFamily(Font(R.font.open_dyslexic)))
+                        fontSize = 11.sp,
+                        fontFamily = FontFamily(Font(R.font.open_dyslexic))
                     )
                 }
             }

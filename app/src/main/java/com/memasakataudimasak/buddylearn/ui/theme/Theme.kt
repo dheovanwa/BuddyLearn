@@ -39,11 +39,13 @@ import androidx.compose.ui.graphics.Color
 
 // Light Theme Colors
 val LightThemeColors = lightColorScheme(
-    primary = Color(0xFF6200EE),
-    secondary = Color(0xFF03DAC6),
+    primary = Color(0xFFF2F6F6),
+    secondary = Color(0xFF9B9898),
     background = Color.White,
-    surface = Color(0xFFDDDDDD),
-    onPrimary = Color.White, // Text on primary color (white text on primary color)
+    primaryContainer = Color(0xFFE8EBEB),
+    secondaryContainer = Color(0xFFCECDCD),
+    surface = Color(0xFFFAFAFA),
+    onPrimary = Color(0xFF363636),
     onSecondary = Color(0xFF363636), // Text on secondary color
     onBackground = Color(0xFF363636), // Text on white background (dark text)
     onSurface = Color(0xFF363636) // Text on light surfaces (dark text)
@@ -51,10 +53,12 @@ val LightThemeColors = lightColorScheme(
 
 // Dark Theme Colors
 val DarkThemeColors = darkColorScheme(
-    primary = Color(0xFF1A1A1A),
-    secondary = Color(0xFF6200EE),
-    background = Color(0xFF121212),
-    surface = Color(0xFF333333),
+    primary = Color(0xFF1B1A18),
+    secondary = Color(0xFF5D5C5B),
+    primaryContainer = Color(0xFF5A5662),
+    secondaryContainer  = Color(0xFF464549),
+    background = Color(0xFF363636),
+    surface = Color(0xFF474747),
     onPrimary = Color(0xFFFBFBFE),
     onSecondary = Color(0xFFFBFBFE),
     onBackground = Color(0xFFFBFBFE),
@@ -63,10 +67,12 @@ val DarkThemeColors = darkColorScheme(
 
 // Warm Theme Colors
 val WarmThemeColors = lightColorScheme(
-    primary = Color(0xFFFF5722),
-    secondary = Color(0xFFFFC107),
-    background = Color(0xFFFFF3E0),
-    surface = Color(0xFFFFE0B2),
+    primary = Color(0xFFFFC107),
+    secondary = Color(0xFFFED78E),
+    primaryContainer = Color(0xFFFEEDDB),
+    secondaryContainer = Color(0xFFFCF3E6),
+    background = Color(0xFFFFF7E8),
+    surface = Color(0xFFFFF7E8),
     onPrimary = Color(0xFF363636),
     onSecondary = Color(0xFF363636),
     onBackground = Color(0xFF363636),
@@ -75,15 +81,19 @@ val WarmThemeColors = lightColorScheme(
 
 // Cold Theme Colors
 val ColdThemeColors = lightColorScheme(
-    primary = Color(0xFF00BCD4),
-    secondary = Color(0xFF4CAF50),
-    background = Color(0xFFE1F5FE),
-    surface = Color(0xFFB2EBF2),
+    primary = Color(0xFF0AD3EE),
+    secondary = Color(0xFF98C5C1),
+    primaryContainer = Color(0xFFCAE2E2),
+    secondaryContainer = Color(0xFFB8C7C4),
+    background = Color(0xFFEEF2FE),
+    surface = Color(0xFFFBFFFF),
     onPrimary = Color(0xFF363636),
     onSecondary = Color(0xFF363636),
     onBackground = Color(0xFF363636),
     onSurface = Color(0xFF363636)
 )
+
+private fun l() = 0xFF98C5C1
 
 @Composable
 fun BuddyLearnTheme(
