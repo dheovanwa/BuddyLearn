@@ -14,99 +14,114 @@ import androidx.compose.ui.platform.LocalContext
 //import androidx.compose.material.darkColors
 import androidx.compose.ui.graphics.Color
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
-
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
-)
-
-val DarkColors = darkColorScheme(
-    primary = Color(0xFF1A1A1A),
-//    primaryVariant = Color(0xFF2C2C2C),
-    secondary = Color(0xFF6200EE),
-    background = Color(0xFF121212),
-    surface = Color(0xFF333333),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onBackground = Color.White,
-    onSurface = Color.White
-)
+//private val DarkColorScheme = darkColorScheme(
+//    primary = Purple80,
+//    secondary = PurpleGrey80,
+//    tertiary = Pink80
+//)
+//
+//private val LightColorScheme = lightColorScheme(
+//    primary = Purple40,
+//    secondary = PurpleGrey40,
+//    tertiary = Pink40
+//
+//
+//    /* Other default colors to override
+//    background = Color(0xFFFFFBFE),
+//    surface = Color(0xFFFFFBFE),
+//    onPrimary = Color.White,
+//    onSecondary = Color.White,
+//    onTertiary = Color.White,
+//    onBackground = Color(0xFF1C1B1F),
+//    onSurface = Color(0xFF1C1B1F),
+//    */
+//)
 
 // Light Theme Colors
-val LightColors = lightColorScheme(
+val LightThemeColors = lightColorScheme(
     primary = Color(0xFF6200EE),
-//    primaryVariant = Color(0xFF3700B3),
     secondary = Color(0xFF03DAC6),
     background = Color.White,
     surface = Color(0xFFDDDDDD),
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black
+    onPrimary = Color.White, // Text on primary color (white text on primary color)
+    onSecondary = Color(0xFF363636), // Text on secondary color
+    onBackground = Color(0xFF363636), // Text on white background (dark text)
+    onSurface = Color(0xFF363636) // Text on light surfaces (dark text)
+)
+
+// Dark Theme Colors
+val DarkThemeColors = darkColorScheme(
+    primary = Color(0xFF1A1A1A),
+    secondary = Color(0xFF6200EE),
+    background = Color(0xFF121212),
+    surface = Color(0xFF333333),
+    onPrimary = Color(0xFFFBFBFE),
+    onSecondary = Color(0xFFFBFBFE),
+    onBackground = Color(0xFFFBFBFE),
+    onSurface = Color(0xFFFBFBFE)
 )
 
 // Warm Theme Colors
-val WarmColors = lightColorScheme(
+val WarmThemeColors = lightColorScheme(
     primary = Color(0xFFFF5722),
-//    primaryVariant = Color(0xFFE64A19),
     secondary = Color(0xFFFFC107),
     background = Color(0xFFFFF3E0),
     surface = Color(0xFFFFE0B2),
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black
+    onPrimary = Color(0xFF363636),
+    onSecondary = Color(0xFF363636),
+    onBackground = Color(0xFF363636),
+    onSurface = Color(0xFF363636)
 )
 
 // Cold Theme Colors
-val ColdColors = lightColorScheme(
+val ColdThemeColors = lightColorScheme(
     primary = Color(0xFF00BCD4),
-//    primaryVariant = Color(0xFF0097A7),
     secondary = Color(0xFF4CAF50),
     background = Color(0xFFE1F5FE),
     surface = Color(0xFFB2EBF2),
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black
+    onPrimary = Color(0xFF363636),
+    onSecondary = Color(0xFF363636),
+    onBackground = Color(0xFF363636),
+    onSurface = Color(0xFF363636)
 )
 
 @Composable
 fun BuddyLearnTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    selectedTheme: String? = null,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+    val isSysteminDarkMode = isSystemInDarkTheme()
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    val colorScheme = when {
+        selectedTheme != null -> {
+            // Use the selected theme (dark, light, warm, cold)
+            when (selectedTheme) {
+                "dark" -> DarkThemeColors
+                "warm" -> WarmThemeColors
+                "cold" -> ColdThemeColors
+                else -> LightThemeColors // Default to light theme
+            }
+        }
+        isSysteminDarkMode-> {
+            DarkThemeColors
+        }
+        else -> {
+            // Use light mode colors if system is in light mode
+            LightThemeColors
+        }
+    }
+
+    val finalColorScheme = if (dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val context = LocalContext.current
+        if (isSysteminDarkMode) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    } else {
+        colorScheme
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = finalColorScheme,
         typography = Typography,
         content = content
     )
