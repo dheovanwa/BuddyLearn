@@ -3,17 +3,7 @@ package com.memasakataudimasak.buddylearn.ui.screen.settings.accessibility
 import android.app.Activity
 import android.util.Log
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -31,10 +21,10 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,17 +32,14 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.memasakataudimasak.buddylearn.R
 import com.memasakataudimasak.buddylearn.ViewModel
-import com.memasakataudimasak.buddylearn.ui.screen.settings.SettingsScreen
 import com.memasakataudimasak.buddylearn.ui.theme.BuddyLearnTheme
 
 @Composable
@@ -71,11 +58,32 @@ fun CustomSlider(
             modifier = Modifier.fillMaxWidth()
         ) {
             for (i in 14..22) {
-                Text(
-                    text = i.toString(),
-                    fontSize = 12.sp,
-                    modifier = Modifier.weight(1f),
-                )
+                if(i == 14){
+                    Text(
+                        text = i.toString(),
+                        fontSize = 12.sp,
+                    )
+                }else if (i == 22) {
+                    // Last item - Align end
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = i.toString(),
+                        fontSize = 12.sp,
+                    )
+                } else {
+                    // Middle items - Align center (using Spacer to center the items)
+                    Spacer(modifier = Modifier.weight(1f))
+                    Box(
+                        modifier = Modifier
+                            .weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = i.toString(),
+                            fontSize = 12.sp
+                        )
+                    }
+                }
             }
         }
 
@@ -125,12 +133,37 @@ fun CustomSliderWeight(
                     else -> FontWeight.Normal
                 }
 
-                Text(
-                    text = "Aa",
-                    fontSize = 12.sp,
-                    fontWeight = fontWeights,
-                    modifier = Modifier.weight(1f),
-                )
+                if (i == 1) {
+                    // First item - Align start
+                    Text(
+                            text = "Aa",
+                            fontSize = 12.sp,
+                            fontWeight = fontWeights,
+                        )
+                } else if (i == 4) {
+                    // Last item - Align end
+                    Spacer(modifier = Modifier.weight(1f))
+                        Text(
+                            text = "Aa",
+                            fontSize = 12.sp,
+                            fontWeight = fontWeights,
+                        )
+//                    }
+                } else {
+                    // Middle items - Align center (using Spacer to center the items)
+                    Spacer(modifier = Modifier.weight(1f))
+                    Box(
+                        modifier = Modifier
+                            .weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Aa",
+                            fontSize = 12.sp,
+                            fontWeight = fontWeights
+                        )
+                    }
+                }
             }
         }
 
@@ -143,8 +176,8 @@ fun CustomSliderWeight(
                 sliderValue = it
                 viewModel.setTextWeightSliderValue(sliderValue)
             },
-            valueRange = 1f..4f,
-            steps = 2, // 8 steps means 7 in-between steps
+            valueRange = 0f..4f,
+            steps = 2, // 2 steps means 2 steps
             modifier = Modifier.fillMaxWidth(),
             colors = SliderDefaults.colors(
                 activeTrackColor = Color(0xFF66E0C2),
@@ -163,7 +196,7 @@ fun AccessibilityScreen(
     // Retrieve the previously selected theme from SharedPreferences, or default to "light"
     val sharedPreferences = LocalContext.current.getSharedPreferences("app_prefs", Activity.MODE_PRIVATE)
     val savedTheme = sharedPreferences.getString("selected_theme", "light") ?: "light"
-    val savedFontFamily = sharedPreferences.getString("selected_font_family", "serif") ?: "serif"
+    val savedFontFamily = sharedPreferences.getString("selected_font_family", "sans") ?: "sans"
     val savedLayout = sharedPreferences.getString("selected_layout", "compact") ?: "compact"
 
     val uiState by viewModel.uiState.collectAsState()
@@ -206,7 +239,9 @@ fun AccessibilityScreen(
 //            .padding(8.dp)
             .border(
                 width = 2.dp,
-                color = if (selectedFontFamily == fontFamily) Color(0xFF11BE19) else Color(0xFFE4E4E7), // Green for selected, Gray for others
+                color = if (selectedFontFamily == fontFamily) Color(0xFF11BE19) else Color(
+                    0xFFE4E4E7
+                ), // Green for selected, Gray for others
                 shape = RoundedCornerShape(16.dp)
             )
             .shadow(4.dp, shape = RoundedCornerShape(16.dp))
@@ -228,13 +263,15 @@ fun AccessibilityScreen(
         .fillMaxSize()
         .padding(
             start = 20.dp,
-            end = 20.dp)
+            end = 20.dp
+        )
         .verticalScroll(rememberScrollState())
     ) {
         BuddyLearnTheme(selectedTheme = selectedTheme) {
             // The inner Column inside the scrollable Box
             Column(
-                Modifier.fillMaxWidth()
+                Modifier
+                    .fillMaxWidth()
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.Center
             ) {
@@ -254,9 +291,12 @@ fun AccessibilityScreen(
                     )
                 }
 
-                Column(Modifier.fillMaxWidth().height(340.dp)) {
+                Column(Modifier
+                    .fillMaxWidth()
+                    .height(340.dp)) {
                     Row(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .height(170.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -269,7 +309,8 @@ fun AccessibilityScreen(
                         ) {
                             Button(
                                 onClick = { saveSelectedTheme("light") },
-                                modifier = selectedButtonTheme("light").height(120.dp)
+                                modifier = selectedButtonTheme("light")
+                                    .height(120.dp)
                                     .width(150.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Color(0xFFFFFFFF),
@@ -305,17 +346,19 @@ fun AccessibilityScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Button(
-                                onClick = { saveSelectedTheme("cold") },
-                                modifier = selectedButtonTheme("cold").height(120.dp).width(150.dp),
+                                onClick = { saveSelectedTheme("dark") },
+                                modifier = selectedButtonTheme("dark")
+                                    .height(120.dp)
+                                    .width(150.dp),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFFE8EDFC),
+                                    containerColor = Color(0xFF363636),
                                     contentColor = Color(0xFF363636)
                                 ),
                                 shape = RoundedCornerShape(14.dp)
                             ) {
                                 Text(
-                                    "Hello from the Cold!",
-                                    color = Color(0xFF363636),
+                                    "Hello from the Dark",
+                                    color = Color(0xFFFBFBFB),
                                     textAlign = TextAlign.Center
                                 )
                             }
@@ -332,7 +375,8 @@ fun AccessibilityScreen(
                     }
 
                     Row(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .fillMaxHeight(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -345,7 +389,9 @@ fun AccessibilityScreen(
                         ) {
                             Button(
                                 onClick = { saveSelectedTheme("warm") },
-                                modifier = selectedButtonTheme("warm").height(120.dp).width(150.dp),
+                                modifier = selectedButtonTheme("warm")
+                                    .height(120.dp)
+                                    .width(150.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Color(0xFFFAEDD3),
                                     contentColor = Color(0xFF363636)
@@ -353,7 +399,7 @@ fun AccessibilityScreen(
                                 shape = RoundedCornerShape(14.dp)
                             ) {
                                 Text(
-                                    "Hello from the Warmth!",
+                                    "Hello from the Sun!",
                                     color = Color(0xFF363636),
                                     textAlign = TextAlign.Center
                                 )
@@ -380,17 +426,19 @@ fun AccessibilityScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Button(
-                                onClick = { saveSelectedTheme("dark") },
-                                modifier = selectedButtonTheme("dark").height(120.dp).width(150.dp),
+                                onClick = { saveSelectedTheme("cold") },
+                                modifier = selectedButtonTheme("cold")
+                                    .height(120.dp)
+                                    .width(150.dp),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFF363636),
+                                    containerColor = Color(0xFFE8EDFC),
                                     contentColor = Color(0xFF363636)
                                 ),
                                 shape = RoundedCornerShape(14.dp)
                             ) {
                                 Text(
-                                    "Hello from the Dark!",
-                                    color = Color(0xFFFBFBFE),
+                                    "Hello from the Cold!",
+                                    color = Color(0xFF363636),
                                     textAlign = TextAlign.Center
                                 )
                             }
@@ -409,7 +457,8 @@ fun AccessibilityScreen(
             }
         }
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .fillMaxHeight(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -453,7 +502,9 @@ fun AccessibilityScreen(
             )
         }
 
-        Column(Modifier.fillMaxWidth().height(120.dp)) {
+        Column(Modifier
+            .fillMaxWidth()
+            .height(120.dp)) {
             // Title or Text at the top
             Box(
                 modifier = Modifier
@@ -470,13 +521,16 @@ fun AccessibilityScreen(
                 )
             }
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .height(80.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(
                     onClick = { saveSelectedFont("sans") },
-                    modifier = selectedButtonFont("sans").height(60.dp).width(100.dp),
+                    modifier = selectedButtonFont("sans")
+                        .height(60.dp)
+                        .width(100.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFFFFFF),
                         contentColor = Color(0xFF363636)
@@ -494,7 +548,9 @@ fun AccessibilityScreen(
 
                 Button(
                     onClick = { saveSelectedFont("serif") },
-                    modifier = selectedButtonFont("serif").height(60.dp).width(100.dp),
+                    modifier = selectedButtonFont("serif")
+                        .height(60.dp)
+                        .width(100.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFFFFFF),
                         contentColor = Color(0xFF363636)
@@ -512,7 +568,9 @@ fun AccessibilityScreen(
 
                 Button(
                     onClick = { saveSelectedFont("dyslexic") },
-                    modifier = selectedButtonFont("dyslexic").height(60.dp).width(100.dp),
+                    modifier = selectedButtonFont("dyslexic")
+                        .height(60.dp)
+                        .width(100.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFFFFFF),
                         contentColor = Color(0xFF363636)
@@ -562,7 +620,9 @@ fun AccessibilityScreen(
             CustomSliderWeight(viewModel)
         }
 
-        Column(Modifier.fillMaxWidth().height(120.dp)) {
+        Column(Modifier
+            .fillMaxWidth()
+            .height(120.dp)) {
             // Title or Text at the top
             Box(
                 modifier = Modifier
@@ -579,13 +639,16 @@ fun AccessibilityScreen(
                 )
             }
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .height(80.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
                 Button(
                     onClick = { saveSelectedLayout("compact") },
-                    modifier = selectedButtonLayout("compact").height(60.dp).width(100.dp),
+                    modifier = selectedButtonLayout("compact")
+                        .height(60.dp)
+                        .width(150.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFFFFFF),
                         contentColor = Color(0xFF363636)
@@ -599,9 +662,13 @@ fun AccessibilityScreen(
                     )
                 }
 
+//                Spacer(Modifier.width(44.dp))
+
                 Button(
                     onClick = { saveSelectedFont("wide") },
-                    modifier = selectedButtonTheme("wide").height(60.dp).width(100.dp),
+                    modifier = selectedButtonTheme("wide")
+                        .height(60.dp)
+                        .width(150.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFFFFFF),
                         contentColor = Color(0xFF363636)
