@@ -124,7 +124,8 @@ fun Learn(
                                 modifier = Modifier
                                     .shadow(elevation = 2.dp, shape = RoundedCornerShape(32.dp))
                                     .width(372.dp)
-                                    .height(90.dp),
+                                    .height(90.dp)
+                                    .speakOnLongPress(tts = ttsManager.returnTts(), ttsEnabled = globalUiState.onTextToSpeech, text = option),
                                 shape = RoundedCornerShape(32),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = backgroundColor,
