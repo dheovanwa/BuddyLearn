@@ -11,8 +11,7 @@ Buddy Learn adalah Aplikasi Edukasi android yang menggunakan AI untuk membantu p
 ## Fitur Utama
 - AI membacakan teks di layar secara real-time.
 - Navigasi aplikasi dibantu suara agar mudah digunakan.
-- Modul pembelajaran audio yang bisa diakses kapan saja.
-- Pengaturan suara bisa disesuaikan: kecepatan, volume, dan jenis suara.
+- Konfigurasi aksesibilitas untuk mengatur preferensi.
 
 ## Cara Install
 1. Clone project ini.
